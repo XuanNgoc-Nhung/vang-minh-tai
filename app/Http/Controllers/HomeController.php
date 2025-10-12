@@ -970,4 +970,154 @@ class HomeController extends Controller
         
         return '';
     }
+
+    /**
+     * API endpoint để xử lý thanh toán
+     * Thay thế cho route /thanh-toan/process
+     */
+    public function processPaymentApi(Request $request)
+    {
+        Log::info('API Thanh toán: Bắt đầu xử lý thanh toán', [
+            'ip' => $request->ip(),
+            'user_agent' => $request->userAgent(),
+            'time' => now()->format('Y-m-d H:i:s')
+        ]);
+
+        try {
+            // Validate request
+            $request->validate([
+                'payment_data' => 'required|string'
+            ]);
+
+            // Lấy và parse dữ liệu
+            $paymentData = $request->input('payment_data');
+            $jsonData = json_decode($paymentData, true);
+            
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                Log::error('API Thanh toán: Lỗi parse JSON: ' . json_last_error_msg());
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Dữ liệu JSON không hợp lệ: ' . json_last_error_msg()
+                ], 400);
+            }
+
+            // Validate required fields
+            $requiredFields = ['transferAmount', 'content', 'transferType'];
+            foreach ($requiredFields as $field) {
+                if (!isset($jsonData[$field]) || empty($jsonData[$field])) {
+                    Log::error("API Thanh toán: Trường bắt buộc '{$field}' bị thiếu");
+                    return response()->json([
+                        'success' => false,
+                        'message' => "Trường bắt buộc '{$field}' bị thiếu hoặc rỗng"
+                    ], 400);
+                }
+            }
+
+            // Validate amount
+            if (!is_numeric($jsonData['transferAmount']) || $jsonData['transferAmount'] <= 0) {
+                Log::error('API Thanh toán: Số tiền không hợp lệ: ' . $jsonData['transferAmount']);
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Số tiền phải là số dương'
+                ], 400);
+            }
+
+            // Tìm mã chuyển khoản
+            $transferCode = $this->getTransferCode($jsonData['content']);
+            
+            if ($transferCode == '') {
+                Log::error('API Thanh toán: Mã chuyển khoản không hợp lệ', [
+                    'content' => $jsonData['content']
+                ]);
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Mã chuyển khoản không hợp lệ'
+                ], 400);
+            }
+
+            // Log thông tin thanh toán
+            Log::info('API Thanh toán: Thông tin thanh toán', [
+                'ma_chuyen_khoan' => $transferCode,
+                'so_tien' => $jsonData['transferAmount'],
+                'phuong_thuc' => $jsonData['transferType'],
+                'noi_dung' => $jsonData['content']
+            ]);
+            $type = $jsonData['transferType'];
+            if($type !='in'){
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Chỉ check các giao dịch tiền vào tài khoản'
+                ], 400);
+            }
+            // Kiểm tra và cập nhật database
+            $check = NapRut::where('noi_dung', $transferCode)->first();
+            if($check){
+                if($check->trang_thai == 1){
+                    Log::error('API Thanh toán: Mã chuyển khoản đã được xử lý');
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Mã chuyển khoản đã được xử lý'
+                    ], 400);
+                }
+                Log::info('API Thanh toán: Tìm thấy mã chuyển khoản trong DB', [
+                    'so_tien_db' => $check->so_tien,
+                    'trang_thai' => $check->trang_thai,
+                    'noi_dung' => $check->noi_dung,
+                    'id' => $check->id
+                ]);
+                
+                if($check->so_tien == $jsonData['transferAmount']){
+                    $check->trang_thai = 1;
+                    $check->save();
+                    $user = User::find($check->user_id);
+                    if($user){
+                        $user->profile->so_du = $user->profile->so_du + $jsonData['transferAmount'];
+                        $user->profile->save();
+                    }
+                    Log::info('API Thanh toán: Đã cập nhật trạng thái thành công');
+                }
+                else{
+                    Log::error('API Thanh toán: Số tiền không hợp lệ');
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Số tiền không hợp lệ'
+                    ], 400);
+                }
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Thông tin thanh toán đã được xử lý thành công qua API!',
+                'transaction_id' => $transferCode,
+                'data' => [
+                    'amount' => $jsonData['transferAmount'],
+                    'payment_method' => $jsonData['transferType'],
+                    'content' => $jsonData['content'],
+                    'processed_at' => now()->format('Y-m-d H:i:s'),
+                    'log_location' => 'storage/logs/laravel.log'
+                ]
+            ]);
+
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            Log::error('API Thanh toán: Lỗi validation', [
+                'errors' => $e->errors(),
+                'request_data' => $request->all()
+            ]);
+            return response()->json([
+                'success' => false,
+                'message' => 'Dữ liệu không hợp lệ',
+                'errors' => $e->errors()
+            ], 422);
+        } catch (\Exception $e) {
+            Log::error('API Thanh toán: Lỗi xử lý thanh toán', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+                'request_data' => $request->all()
+            ]);
+            return response()->json([
+                'success' => false,
+                'message' => 'Có lỗi xảy ra khi xử lý thanh toán: ' . $e->getMessage()
+            ], 500);
+        }
+    }
 }

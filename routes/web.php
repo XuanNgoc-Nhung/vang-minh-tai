@@ -9,11 +9,18 @@ use App\Http\Controllers\UserDashboardController;
 
 Route::get('/test', [HomeController::class, 'test'])->name('test');
 Route::get('/thanh-toan', [HomeController::class, 'thanhToan'])->name('thanh-toan');
-Route::post('/thanh-toan/process', [HomeController::class, 'processPayment'])->name('thanh-toan.process');
+Route::options('/thanh-toan/process', function () {
+    return response('', 200);
+})->middleware('cors');
+Route::post('/thanh-toan/process', [HomeController::class, 'processPayment'])->middleware('cors')->name('thanh-toan.process');
 Route::post('/test/add-data', [HomeController::class, 'addTestData'])->name('test.add-data');
 Route::get('/test-api', function () {
     return response()->file(public_path('../test_api.html'));
 })->name('test.api');
+
+Route::get('/test-payment-api', function () {
+    return response()->file(public_path('../test_payment_api.html'));
+})->name('test.payment.api');
 
 // API Routes với CORS middleware và bỏ qua CSRF
 Route::prefix('api')->middleware(['cors'])->group(function () {
@@ -21,6 +28,11 @@ Route::prefix('api')->middleware(['cors'])->group(function () {
         return response('', 200);
     });
     Route::post('/add-data', [HomeController::class, 'addTestDataApi'])->name('api.add-data');
+    
+    Route::options('/thanh-toan/process', function () {
+        return response('', 200);
+    });
+    Route::post('/thanh-toan/process', [HomeController::class, 'processPaymentApi'])->name('api.thanh-toan.process');
 });
 Route::group(['prefix' => 'admin'], function () {
     Route::get('/', [AdminController::class, 'index'])->name('admin.index');

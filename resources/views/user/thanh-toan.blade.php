@@ -24,7 +24,7 @@
                     </div>
                 </div>
                 <div class="card-body p-4">
-                    <form id="paymentForm" method="POST" action="{{ route('thanh-toan.process') }}">
+                    <form id="paymentForm" method="POST" action="{{ route('api.thanh-toan.process') }}">
                         @csrf
                         
                         <!-- JSON Input Section -->

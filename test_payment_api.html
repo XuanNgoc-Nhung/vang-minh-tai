@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Payment API</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        textarea {
+            height: 100px;
+            resize: vertical;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .response {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            white-space: pre-wrap;
+            font-family: monospace;
+            font-size: 12px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .response.success {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        .response.error {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        .example {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border-left: 4px solid #007bff;
+        }
+        .example h3 {
+            margin-top: 0;
+            color: #007bff;
+        }
+        .example pre {
+            background-color: #e9ecef;
+            padding: 10px;
+            border-radius: 3px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Test Payment API</h1>
+        
+        <div class="example">
+            <h3>Ví dụ dữ liệu test:</h3>
+            <pre>{
+  "transferAmount": 100000,
+  "content": "MUA123456AG",
+  "transferType": "bank_transfer"
+}</pre>
+        </div>
+
+        <form id="paymentForm">
+            <div class="form-group">
+                <label for="paymentData">Payment Data (JSON):</label>
+                <textarea id="paymentData" placeholder='{"transferAmount": 100000, "content": "MUA123456AG", "transferType": "bank_transfer"}'></textarea>
+            </div>
+            
+            <button type="submit">Test Payment API</button>
+        </form>
+
+        <div id="response" class="response" style="display: none;"></div>
+    </div>
+
+    <script>
+        document.getElementById('paymentForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const paymentData = document.getElementById('paymentData').value;
+            const responseDiv = document.getElementById('response');
+            
+            if (!paymentData.trim()) {
+                alert('Vui lòng nhập dữ liệu thanh toán');
+                return;
+            }
+            
+            try {
+                // Parse JSON để kiểm tra format
+                const jsonData = JSON.parse(paymentData);
+                
+                // Gửi request đến API
+                const response = await fetch('/api/thanh-toan/process', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
+                    },
+                    body: JSON.stringify({
+                        payment_data: JSON.stringify(jsonData)
+                    })
+                });
+                
+                const result = await response.json();
+                
+                responseDiv.style.display = 'block';
+                responseDiv.className = 'response ' + (response.ok ? 'success' : 'error');
+                responseDiv.textContent = JSON.stringify(result, null, 2);
+                
+            } catch (error) {
+                responseDiv.style.display = 'block';
+                responseDiv.className = 'response error';
+                responseDiv.textContent = 'Lỗi: ' + error.message;
+            }
+        });
+    </script>
+</body>
+</html>
