@@ -8,6 +8,7 @@ use App\Models\VangDauTu;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use App\Models\GiaVang;
+use App\Models\NapRut;
 
 class HomeController extends Controller
 {
@@ -808,5 +809,159 @@ class HomeController extends Controller
                 'message' => 'Có lỗi xảy ra khi xử lý dữ liệu: ' . $e->getMessage()
             ], 500);
         }
+    }
+    public function thanhToan()
+    {
+        return view('user.thanh-toan');
+    }
+
+    public function processPayment(Request $request)
+    {
+        Log::info('Bắt đầu xử lý thanh toán', [
+            'ip' => $request->ip(),
+            'time' => now()->format('Y-m-d H:i:s')
+        ]);
+
+        try {
+            // Validate request
+            $request->validate([
+                'payment_data' => 'required|string'
+            ]);
+
+            // Lấy và parse dữ liệu
+            $paymentData = $request->input('payment_data');
+            $jsonData = json_decode($paymentData, true);
+            
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                Log::error('Lỗi parse JSON: ' . json_last_error_msg());
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Dữ liệu JSON không hợp lệ: ' . json_last_error_msg()
+                ], 400);
+            }
+
+            // Validate required fields
+            $requiredFields = ['transferAmount', 'content', 'transferType'];
+            foreach ($requiredFields as $field) {
+                if (!isset($jsonData[$field]) || empty($jsonData[$field])) {
+                    Log::error("Trường bắt buộc '{$field}' bị thiếu");
+                    return response()->json([
+                        'success' => false,
+                        'message' => "Trường bắt buộc '{$field}' bị thiếu hoặc rỗng"
+                    ], 400);
+                }
+            }
+
+            // Validate amount
+            if (!is_numeric($jsonData['transferAmount']) || $jsonData['transferAmount'] <= 0) {
+                Log::error('Số tiền không hợp lệ: ' . $jsonData['transferAmount']);
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Số tiền phải là số dương'
+                ], 400);
+            }
+
+            // Tìm mã chuyển khoản
+            $transferCode = $this->getTransferCode($jsonData['content']);
+            
+            if ($transferCode == '') {
+                Log::error('Mã chuyển khoản không hợp lệ');
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Mã chuyển khoản không hợp lệ'
+                ], 400);
+            }
+
+            // Log thông tin thanh toán
+            Log::info('Thông tin thanh toán', [
+                'ma_chuyen_khoan' => $transferCode,
+                'so_tien' => $jsonData['transferAmount'],
+                'phuong_thuc' => $jsonData['transferType'],
+                'noi_dung' => $jsonData['content']
+            ]);
+
+            // Kiểm tra và cập nhật database
+            $check = NapRut::where('noi_dung', $transferCode)->first();
+            if($check){
+                if($check->trang_thai == 1){
+                    Log::error('Mã chuyển khoản đã được xử lý');
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Mã chuyển khoản đã được xử lý'
+                    ], 400);
+                }
+                Log::info('Tìm thấy mã chuyển khoản trong DB', [
+                    'so_tien_db' => $check->so_tien,
+                    'trang_thai' => $check->trang_thai,
+                    'noi_dung' => $check->noi_dung,
+                    'id' => $check->id
+                ]);
+                
+                if($check->so_tien == $jsonData['transferAmount']){
+                    $check->trang_thai = 1;
+                    $check->save();
+                    Log::info('Đã cập nhật trạng thái thành công');
+                }
+                else{
+                    Log::error('Số tiền không hợp lệ');
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Số tiền không hợp lệ'
+                    ], 400);
+                }
+            }
+
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Thông tin thanh toán đã được xử lý thành công!',
+                'transaction_id' => $transferCode,
+                'data' => [
+                    'amount' => $jsonData['transferAmount'],
+                    'payment_method' => $jsonData['transferType'],
+                    'content' => $jsonData['content'],
+                    'processed_at' => now()->format('Y-m-d H:i:s')
+                ]
+            ]);
+
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            Log::error('Lỗi validation', ['errors' => $e->errors()]);
+            return response()->json([
+                'success' => false,
+                'message' => 'Dữ liệu không hợp lệ',
+                'errors' => $e->errors()
+            ], 422);
+        } catch (\Exception $e) {
+            Log::error('Lỗi xử lý thanh toán: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Có lỗi xảy ra khi xử lý thanh toán: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    private function getTransferCode($content)
+    {
+        Log::info('Hàm getTransferCode: Bắt đầu tìm mã chuyển khoản', [
+            'content' => $content,
+            'content_length' => strlen($content)
+        ]);
+
+        // Tìm chuỗi bắt đầu bằng MUA và kết thúc bằng AG
+        if (preg_match('/MUA[a-zA-Z0-9]+AG/', $content, $matches)) {
+            $transferCode = $matches[0];
+            Log::info('Hàm getTransferCode: Tìm thấy mã chuyển khoản', [
+                'found_code' => $transferCode,
+                'match_position' => strpos($content, $transferCode)
+            ]);
+            return $transferCode;
+        }
+
+        Log::warning('Hàm getTransferCode: Không tìm thấy mã chuyển khoản hợp lệ', [
+            'content' => $content,
+            'pattern' => 'MUA[a-zA-Z0-9]+AG'
+        ]);
+        
+        return '';
     }
 }

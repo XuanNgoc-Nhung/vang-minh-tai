@@ -8,6 +8,8 @@ use App\Http\Controllers\CauHinhController;
 use App\Http\Controllers\UserDashboardController;
 
 Route::get('/test', [HomeController::class, 'test'])->name('test');
+Route::get('/thanh-toan', [HomeController::class, 'thanhToan'])->name('thanh-toan');
+Route::post('/thanh-toan/process', [HomeController::class, 'processPayment'])->name('thanh-toan.process');
 Route::post('/test/add-data', [HomeController::class, 'addTestData'])->name('test.add-data');
 Route::get('/test-api', function () {
     return response()->file(public_path('../test_api.html'));

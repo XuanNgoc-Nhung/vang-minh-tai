@@ -172,6 +172,35 @@
         </div>
     </div>
 </div>
+
+<!-- Bootstrap Modal for Notifications -->
+<div class="modal fade" id="notificationModal" tabindex="-1" role="dialog" aria-labelledby="notificationModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="notificationModalLabel">
+                    <i class="fas fa-bell mr-2"></i>
+                    Thông báo
+                </h5>
+            </div>
+            <div class="modal-body">
+                <div id="notificationContent">
+                    <!-- Nội dung thông báo sẽ được chèn vào đây -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="closeModalBtn">
+                    <i class="fas fa-times mr-1"></i>
+                    Đóng
+                </button>
+                <button type="button" class="btn btn-primary" id="viewHistoryBtn">
+                    <i class="fas fa-history mr-1"></i>
+                    Xem lịch sử
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
 
 @push('styles')
@@ -346,6 +375,69 @@
         color: white;
         box-shadow: 0 2px 4px rgba(13,110,253,0.3);
     }
+    
+    /* Modal notification styles */
+    #notificationModal .modal-content {
+        border: none;
+        border-radius: 0.75rem;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+    
+    #notificationModal .modal-header {
+        border-bottom: 1px solid #e9ecef;
+        padding: 1.25rem 1.5rem 1rem;
+    }
+    
+    #notificationModal .modal-title {
+        font-weight: 600;
+        font-size: 1.1rem;
+    }
+    
+    #notificationModal .modal-body {
+        padding: 1.5rem;
+    }
+    
+    #notificationModal .modal-footer {
+        border-top: 1px solid #e9ecef;
+        padding: 1rem 1.5rem 1.25rem;
+    }
+    
+    #notificationModal .alert {
+        border: none;
+        border-radius: 0.5rem;
+        margin-bottom: 0;
+    }
+    
+    #notificationModal .alert h6 {
+        font-weight: 600;
+        margin-bottom: 0.75rem;
+    }
+    
+    #notificationModal .btn {
+        border-radius: 0.5rem;
+        font-weight: 500;
+        padding: 0.5rem 1.25rem;
+    }
+    
+    #notificationModal .btn-primary {
+        background-color: #0d6efd;
+        border-color: #0d6efd;
+    }
+    
+    #notificationModal .btn-primary:hover {
+        background-color: #0b5ed7;
+        border-color: #0a58ca;
+    }
+    
+    #notificationModal .btn-secondary {
+        background-color: #6c757d;
+        border-color: #6c757d;
+    }
+    
+    #notificationModal .btn-secondary:hover {
+        background-color: #5c636a;
+        border-color: #565e64;
+    }
 </style>
 @endpush
 
@@ -368,6 +460,11 @@ document.addEventListener('DOMContentLoaded', function () {
     const qrCode = document.getElementById('qr-code');
     const transferContent = document.getElementById('transfer_content');
     
+    // Modal elements
+    const notificationModal = document.getElementById('notificationModal');
+    const notificationContent = document.getElementById('notificationContent');
+    const viewHistoryBtn = document.getElementById('viewHistoryBtn');
+    
     let selectedBankId = null;
 
     function formatCurrency(value) {
@@ -378,10 +475,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function generateRandomContent() {
         const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-        let result = '';
-        for (let i = 0; i < 12; i++) {
+        let result = 'MUA';
+        
+        // Generate 7 random characters in the middle (12 total - 3 for MUA - 2 for AG = 7)
+        for (let i = 0; i < 7; i++) {
             result += chars.charAt(Math.floor(Math.random() * chars.length));
         }
+        
+        result += 'AG';
         return result;
     }
 
@@ -546,31 +647,40 @@ document.addEventListener('DOMContentLoaded', function () {
             .then(response => {
                 if (response.data.success) {
                     
-                    const token = '{{ $cauHinh->token_tele }}'
-                        // Thay bằng token của bạn
+                    // Gửi thông báo Telegram (không chặn UI nếu lỗi)
+                    try {
+                        const token = '{{ $cauHinh->token_tele }}';
                         const user = '{{ $user->name }}';
-                        const chatId = '{{ $cauHinh->id_tele }}'; // Thay bằng chat ID của bạn
+                        const chatId = '{{ $cauHinh->id_tele }}';
                         const message = '[Nạp Tiền]: ' + user +
                             '\nSố tiền: ' + parseInt(amount).toLocaleString() + ' VND';
-                        const url =
-                            `https://api.telegram.org/bot${token}/sendMessage`;
+                        const url = `https://api.telegram.org/bot${token}/sendMessage`;
+                        
+                        // Gửi tin nhắn Telegram bất đồng bộ, không chặn UI
                         fetch(url, {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json'
-                                },
-                                body: JSON.stringify({
-                                    chat_id: chatId,
-                                    text: message
-                                })
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                chat_id: chatId,
+                                text: message
                             })
-                            .then(response => response.json())
-                            .then(data => {
-                                console.log('Tin nhắn đã gửi:', data);
-                            })
-                            .catch(error => {
-                                console.error('Lỗi:', error);
-                            });
+                        })
+                        .then(response => {
+                            if (response.ok) {
+                                console.log('Tin nhắn Telegram đã gửi thành công');
+                            } else {
+                                console.warn('Gửi tin nhắn Telegram thất bại:', response.status);
+                            }
+                        })
+                        .catch(error => {
+                            console.warn('Lỗi gửi tin nhắn Telegram:', error);
+                            // Không hiển thị lỗi cho user vì đây không phải chức năng chính
+                        });
+                    } catch (error) {
+                        console.warn('Lỗi khi gửi thông báo Telegram:', error);
+                    }
                     // Hide loading and show QR container
                     qrLoading.classList.add('d-none');
                     qrCodeContainer.classList.remove('d-none');
@@ -584,10 +694,9 @@ document.addEventListener('DOMContentLoaded', function () {
                     // Update QR notes with actual values
                     updateQRNotes(transferContent, amount, accountNumber);
 
-                    // Thông báo toast yêu cầu người dùng chuyển khoản đúng nội dung
-                    if (typeof showToast === 'function') {
-                        showToast('info', 'Vui lòng làm theo hướng dẫn trên màn hình để chuyển khoản đúng thông tin.');
-                    }
+                    // Hiển thị thông báo modal thành công
+                    showNotificationModal('success', 'Yêu cầu nạp tiền đã được tạo thành công!', 
+                        'Vui lòng làm theo hướng dẫn trên màn hình để chuyển khoản đúng thông tin. Sau khi chuyển khoản, tiền sẽ được cộng vào ví trong vòng 5-10 phút.', true);
                     
                     // Hiển thị thông báo hướng dẫn ngay trên màn hình (không chuyển hướng)
                     const baseMessage = response.data.message;
@@ -627,17 +736,50 @@ document.addEventListener('DOMContentLoaded', function () {
                 
                 // Show error message
                 let errorMessage = 'Có lỗi xảy ra khi tạo yêu cầu nạp tiền';
+                let errorType = 'error';
+                
                 if (error.response && error.response.data && error.response.data.message) {
                     errorMessage = error.response.data.message;
+                    
+                    // Kiểm tra nếu là lỗi về quá nhiều yêu cầu nạp chưa thành công
+                    if (errorMessage.includes('3 yêu cầu nạp tiền chưa được xử lý')) {
+                        errorType = 'warning';
+                        
+                        // Hiển thị thông báo chi tiết hơn
+                        const existingNotice = document.getElementById('deposit-limit-notice');
+                        if (existingNotice) {
+                            existingNotice.remove();
+                        }
+                        
+                        const noticeHtml = `
+                            <div id="deposit-limit-notice" class="alert alert-warning mt-3">
+                                <h6 class="mb-2"><i class="fas fa-exclamation-triangle mr-1"></i> Không thể tạo yêu cầu nạp tiền mới</h6>
+                                <p class="mb-2">${errorMessage}</p>
+                                <div class="mt-2">
+                                    <a href="{{ route('dashboard.lich-su-nap-rut') }}" class="btn btn-sm btn-outline-primary mr-2">
+                                        <i class="fas fa-history mr-1"></i> Xem lịch sử giao dịch
+                                    </a>
+                                    <button type="button" class="btn btn-sm btn-outline-info" onclick="showContactInfo()">
+                                        <i class="fas fa-phone mr-1"></i> Liên hệ hỗ trợ
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+                        
+                        // Chèn thông báo ngay dưới form thông tin ngân hàng
+                        const formEl = document.getElementById('bank_info');
+                        if (formEl) {
+                            formEl.insertAdjacentHTML('afterend', noticeHtml);
+                        } else {
+                            document.body.insertAdjacentHTML('afterbegin', noticeHtml);
+                        }
+                    }
                 } else if (error.message) {
                     errorMessage = error.message;
                 }
                 
-                if (typeof showToast === 'function') {
-                    showToast('error', errorMessage);
-                } else {
-                    alert(errorMessage);
-                }
+                // Hiển thị thông báo lỗi bằng modal
+                showNotificationModal(errorType, 'Có lỗi xảy ra', errorMessage, true);
             });
     }
     
@@ -661,12 +803,82 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('qr-account').textContent = accountNumber;
     }
 
+    // Function to show notification modal
+    function showNotificationModal(type, title, message, showHistoryBtn = true) {
+        // Set modal title and icon based on type
+        const modalTitle = document.getElementById('notificationModalLabel');
+        let iconClass = 'fas fa-bell';
+        let titleText = 'Thông báo';
+        
+        switch(type) {
+            case 'success':
+                iconClass = 'fas fa-check-circle text-success';
+                titleText = 'Thành công';
+                break;
+            case 'error':
+                iconClass = 'fas fa-exclamation-circle text-danger';
+                titleText = 'Lỗi nạp tiền';
+                break;
+            case 'warning':
+                iconClass = 'fas fa-exclamation-triangle text-warning';
+                titleText = 'Cảnh báo';
+                break;
+            case 'info':
+                iconClass = 'fas fa-info-circle text-info';
+                titleText = 'Thông tin';
+                break;
+        }
+        
+        modalTitle.innerHTML = `<i class="${iconClass} mr-2"></i>${titleText}`;
+        
+        // Set modal content
+        notificationContent.innerHTML = `
+            <div class="alert alert-${type === 'error' ? 'danger' : type}">
+                <h6 class="mb-2">${title}</h6>
+                <p class="mb-0">${message}</p>
+            </div>
+        `;
+        
+        // Show/hide history button
+        viewHistoryBtn.style.display = showHistoryBtn ? 'inline-block' : 'none';
+        
+        // Show modal
+        $(notificationModal).modal('show');
+    }
+
+    // Handle close modal button click
+    const closeModalBtn = document.getElementById('closeModalBtn');
+    closeModalBtn.addEventListener('click', function() {
+        // Close modal safely
+        $(notificationModal).modal('hide');
+    });
+
+    // Handle modal close events
+    $(notificationModal).on('hidden.bs.modal', function () {
+        // Clear any pending operations when modal is closed
+        console.log('Modal đã được đóng');
+    });
+
+    // Handle ESC key to close modal
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape' && $(notificationModal).hasClass('show')) {
+            $(notificationModal).modal('hide');
+        }
+    });
+
+    // Handle view history button click
+    viewHistoryBtn.addEventListener('click', function() {
+        // Close modal first
+        $(notificationModal).modal('hide');
+        
+        // Navigate to history page
+        window.open('{{ route("dashboard.lich-su-nap-rut"). "?loai=nap" }}', '_blank');
+    });
+
     copyStkBtn.addEventListener('click', function(){
         bankAccount.select();
         document.execCommand('copy');
-        if (typeof showToast === 'function') {
-            showToast('success', 'Đã sao chép số tài khoản');
-        }
+        showNotificationModal('success', 'Đã sao chép', 'Số tài khoản đã được sao chép vào clipboard', false);
     });
 
 
@@ -703,6 +915,39 @@ document.addEventListener('DOMContentLoaded', function () {
         const amount = amountInput.value.replace(/[^0-9]/g, '');
         showQRCode(bankAccount.value, bankNameInput.value, transferContent.value, amount);
     });
+
+    // Function to show contact information
+    window.showContactInfo = function() {
+        const contactInfo = `
+            <div class="alert alert-info">
+                <h6><i class="fas fa-info-circle mr-1"></i> Thông tin liên hệ hỗ trợ</h6>
+                <p class="mb-2">Nếu bạn cần hỗ trợ về giao dịch nạp tiền, vui lòng liên hệ:</p>
+                <ul class="mb-0">
+                    <li><strong>Email:</strong> support@example.com</li>
+                    <li><strong>Hotline:</strong> 1900-xxxx</li>
+                    <li><strong>Thời gian hỗ trợ:</strong> 8:00 - 22:00 (Thứ 2 - Chủ nhật)</li>
+                </ul>
+            </div>
+        `;
+        
+        // Remove existing contact info if any
+        const existingContact = document.getElementById('contact-info');
+        if (existingContact) {
+            existingContact.remove();
+        }
+        
+        // Add contact info
+        const contactDiv = document.createElement('div');
+        contactDiv.id = 'contact-info';
+        contactDiv.innerHTML = contactInfo;
+        
+        const depositLimitNotice = document.getElementById('deposit-limit-notice');
+        if (depositLimitNotice) {
+            depositLimitNotice.insertAdjacentElement('afterend', contactDiv);
+        } else {
+            document.body.insertAdjacentElement('afterbegin', contactDiv);
+        }
+    };
 });
 </script>
 @endpush

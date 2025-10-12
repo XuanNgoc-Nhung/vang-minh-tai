@@ -49,7 +49,7 @@
                         {{ auth()->user()->phone ?? 'Tài khoản' }}
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end">
-                        <li><a class="dropdown-item" href="{{ route('dashboard') }}">Dashboard</a></li>
+                        <li><a class="dropdown-item" href="{{ route('dashboard') }}">Tổng quan</a></li>
                         <li><a class="dropdown-item" href="{{ route('dashboard.profile') }}">Cá nhân</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li>

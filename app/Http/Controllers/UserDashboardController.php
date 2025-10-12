@@ -383,6 +383,7 @@ class UserDashboardController extends Controller
                 ->orderBy('ten_ngan_hang')
                 ->get();
             $cauHinh = CauHinh::first();
+            $cauHinh = $cauHinh ? $cauHinh : new CauHinh();
             $view = view('user.dashboard.nap-tien', compact('user', 'banks', 'cauHinh'));
             Log::info('UserDashboardController@napTien: Hiển thị trang nạp tiền thành công', [
                 'user_id' => Auth::id()
@@ -450,6 +451,25 @@ class UserDashboardController extends Controller
             'chu_tai_khoan' => $request->chu_tai_khoan,
             'noi_dung' => $request->noi_dung
         ]);
+
+        // Kiểm tra số lượng yêu cầu nạp chưa thành công
+        $pendingDepositCount = NapRut::where('user_id', $user->id)
+            ->where('loai', 'nap')
+            ->where('trang_thai', 0) // 0: chờ xử lý
+            ->count();
+
+        if ($pendingDepositCount >= 3) {
+            Log::warning('UserDashboardController@createNapTienRequest: User có quá nhiều yêu cầu nạp chưa thành công', [
+                'user_id' => $user->id,
+                'pending_count' => $pendingDepositCount,
+                'ip_address' => $request->ip()
+            ]);
+            
+            return response()->json([
+                'success' => false,
+                'message' => 'Bạn đã có 3 yêu cầu nạp tiền chưa được xử lý. Vui lòng hoàn thành giao dịch hoặc liên hệ admin để được hỗ trợ.'
+            ]);
+        }
 
         try {
             // Tạo yêu cầu nạp tiền
