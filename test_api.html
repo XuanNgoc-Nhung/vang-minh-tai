@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test API Add Data</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        textarea {
+            width: 100%;
+            height: 200px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .response {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 4px;
+            white-space: pre-wrap;
+            font-family: monospace;
+        }
+        .success {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        .error {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+    </style>
+</head>
+<body>
+    <h1>Test API Add Data</h1>
+    <p>Đây là trang test cho API endpoint mới: <code>/api/add-data</code></p>
+    
+    <form id="testForm">
+        <div class="form-group">
+            <label for="testData">Dữ liệu test (JSON):</label>
+            <textarea id="testData" placeholder="Nhập dữ liệu JSON để test...">{
+  "duLieu": {
+    "1": {
+      "gia_mua": 75000000,
+      "gia_ban": 76000000
+    },
+    "2": {
+      "gia_mua": 75500000,
+      "gia_ban": 76500000
+    }
+  },
+  "thoiGian": "2024-01-15 10:30:00"
+}</textarea>
+        </div>
+        
+        <button type="submit">Gửi dữ liệu qua API</button>
+    </form>
+    
+    <div id="response" class="response" style="display: none;"></div>
+
+    <script>
+        document.getElementById('testForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const testData = document.getElementById('testData').value;
+            const responseDiv = document.getElementById('response');
+            
+            try {
+                // Parse JSON để kiểm tra format
+                const jsonData = JSON.parse(testData);
+                
+                // Gửi request đến API
+                const response = await fetch('/api/add-data', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
+                    },
+                    body: JSON.stringify({
+                        data: jsonData
+                    })
+                });
+                
+                const result = await response.json();
+                
+                responseDiv.style.display = 'block';
+                responseDiv.className = 'response ' + (response.ok ? 'success' : 'error');
+                responseDiv.textContent = JSON.stringify(result, null, 2);
+                
+            } catch (error) {
+                responseDiv.style.display = 'block';
+                responseDiv.className = 'response error';
+                responseDiv.textContent = 'Lỗi: ' + error.message;
+            }
+        });
+    </script>
+</body>
+</html>
