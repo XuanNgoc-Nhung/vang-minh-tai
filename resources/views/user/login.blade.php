@@ -3,38 +3,48 @@
 @section('title', 'Đăng nhập - Web Đầu Tư')
 
 @section('content')
-<div class="min-vh-100 d-flex align-items-center bg-light">
-    <div class="container">
+<div class="min-vh-100 d-flex align-items-center login-bg">
+    <div class="container mt-5 mb-5">
         <div class="row justify-content-center">
             <div class="col-lg-12">
-                <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
+                <div class="card shadow-lg border-0 rounded-4 overflow-hidden login-card">
                     <div class="row g-0">
                         <!-- Phần bên trái - Logo và khẩu hiệu -->
                         <div class="col-lg-6 d-none d-lg-block">
-                            <div class="h-100 bg-soft-primary d-flex align-items-center justify-content-center">
-                                <div class="text-center px-4">
+                            <div class="h-100 login-left-panel d-flex align-items-center justify-content-center position-relative">
+                                <!-- Background pattern -->
+                                <div class="login-pattern"></div>
+                                
+                                <div class="text-center px-4 position-relative z-1">
                                     <!-- Logo -->
                                     <div class="mb-4">
-                                        <div class="d-inline-flex align-items-center justify-content-center bg-primary text-white rounded-circle" style="width: 80px; height: 80px;">
+                                        <div class="d-inline-flex align-items-center justify-content-center login-logo">
                                             <i class="bi bi-graph-up-arrow display-4"></i>
                                         </div>
                                     </div>
                                     
                                     <!-- Khẩu hiệu -->
-                                    <h3 class="fw-bold text-dark mb-3">{{ config('app.name') }}</h3>
-                                    <p class="text-muted lead">
+                                    <h3 class="fw-bold text-white mb-3 login-title">{{ config('app.name') }}</h3>
+                                    <p class="text-white-50 lead login-subtitle">
                                         {{ config('app.slogan') }}
                                     </p>
+                                    
+                                    <!-- Decorative elements -->
+                                    <div class="login-decorations">
+                                        <div class="decoration-circle decoration-1"></div>
+                                        <div class="decoration-circle decoration-2"></div>
+                                        <div class="decoration-circle decoration-3"></div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                         
                         <!-- Phần bên phải - Form đăng nhập -->
                         <div class="col-lg-6">
-                            <div class="p-4 p-lg-5">
+                            <div class="p-4 p-lg-5 login-form-container">
                                 <div class="text-center mb-4">
-                                    <h3 class="fw-bold text-dark mb-2">Đăng nhập tài khoản</h3>
-                                    <p class="text-muted">Chào mừng bạn quay trở lại</p>
+                                    <h3 class="fw-bold text-dark mb-2 login-form-title">Đăng nhập tài khoản</h3>
+                                    <p class="text-muted login-form-subtitle">Chào mừng bạn quay trở lại</p>
                                 </div>
 
                                 <form id="loginForm" novalidate>
@@ -67,7 +77,7 @@
                                                    placeholder="Nhập mật khẩu"
                                                    required>
                                             <button type="button" class="btn btn-link position-absolute end-0 top-50 translate-middle-y pe-3" onclick="togglePassword('password')">
-                                                <i id="password-icon"></i>
+                                                <i id="password-icon" class="bi bi-eye"></i>
                                             </button>
                                         </div>
                                     </div>
@@ -109,9 +119,170 @@
 
 @push('styles')
 <style>
+    /* Background cho toàn bộ trang */
+    .login-bg {
+        background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #1e3c72 100%);
+        background-attachment: fixed;
+        position: relative;
+    }
+    
+    .login-bg::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="75" cy="75" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="50" cy="10" r="0.5" fill="rgba(255,255,255,0.05)"/><circle cx="10" cy="60" r="0.5" fill="rgba(255,255,255,0.05)"/><circle cx="90" cy="40" r="0.5" fill="rgba(255,255,255,0.05)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+        opacity: 0.3;
+        pointer-events: none;
+    }
+    
+    /* Card styling */
+    .login-card {
+        backdrop-filter: blur(10px);
+        background: rgba(255, 255, 255, 0.75);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+        transition: all 0.3s ease;
+    }
+    
+    .login-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 35px 70px rgba(0, 0, 0, 0.2);
+    }
+    
+    /* Left panel với gradient đẹp */
+    .login-left-panel {
+        background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 50%, #ff9ff3 100%);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .login-left-panel::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+        animation: float 6s ease-in-out infinite;
+    }
+    
+    /* Background pattern */
+    .login-pattern {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60"><defs><pattern id="grid" width="60" height="60" patternUnits="userSpaceOnUse"><path d="M 60 0 L 0 0 0 60" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/></pattern></defs><rect width="60" height="60" fill="url(%23grid)"/></svg>');
+        opacity: 0.2;
+    }
+    
+    /* Logo styling */
+    .login-logo {
+        background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.1) 100%);
+        backdrop-filter: blur(10px);
+        border: 2px solid rgba(255,255,255,0.3);
+        color: white;
+        border-radius: 50%;
+        width: 80px;
+        height: 80px;
+        transition: all 0.3s ease;
+    }
+    
+    .login-logo:hover {
+        transform: scale(1.1) rotate(5deg);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+    
+    /* Title styling */
+    .login-title {
+        text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        animation: fadeInUp 1s ease 0.5s both;
+    }
+    
+    .login-subtitle {
+        text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+        animation: fadeInUp 1s ease 0.7s both;
+    }
+    
+    /* Decorative circles */
+    .login-decorations {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        pointer-events: none;
+    }
+    
+    .decoration-circle {
+        position: absolute;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.1);
+        animation: float 4s ease-in-out infinite;
+    }
+    
+    .decoration-1 {
+        width: 20px;
+        height: 20px;
+        top: 20%;
+        left: 10%;
+        animation-delay: 0s;
+    }
+    
+    .decoration-2 {
+        width: 15px;
+        height: 15px;
+        top: 60%;
+        right: 15%;
+        animation-delay: 1s;
+    }
+    
+    .decoration-3 {
+        width: 25px;
+        height: 25px;
+        bottom: 20%;
+        left: 20%;
+        animation-delay: 2s;
+    }
+    
+    /* Form container */
+    .login-form-container {
+        background: linear-gradient(135deg, rgba(255,255,255,0.7) 0%, rgba(248,250,252,0.7) 100%);
+        position: relative;
+    }
+    
+    .login-form-title {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        animation: fadeInUp 1s ease 0.3s both;
+    }
+    
+    .login-form-subtitle {
+        animation: fadeInUp 1s ease 0.5s both;
+    }
+    
+    /* Form controls styling */
+    .form-control {
+        border: 2px solid rgba(102, 126, 234, 0.1);
+        border-radius: 12px;
+        padding: 12px 16px;
+        transition: all 0.3s ease;
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(5px);
+    }
+    
     .form-control:focus {
-        border-color: var(--bs-primary);
-        box-shadow: 0 0 0 0.2rem rgba(var(--bs-primary-rgb), 0.25);
+        border-color: #667eea;
+        box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        background: rgba(255, 255, 255, 0.95);
+        transform: translateY(-2px);
     }
     
     /* Highlight input with error */
@@ -137,7 +308,51 @@
         box-shadow: 0 0 0 0.2rem rgba(25, 135, 84, 0.25);
     }
     
-    /* Shake animation for error */
+    /* Button styling */
+    .btn-primary {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        border-radius: 12px;
+        padding: 12px 24px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    }
+    
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+    }
+    
+    .btn-primary:active {
+        transform: translateY(0);
+    }
+    
+    /* Form labels */
+    .form-label {
+        color: #4a5568;
+        font-weight: 600;
+        margin-bottom: 8px;
+    }
+    
+    /* Animations */
+    @keyframes float {
+        0%, 100% { transform: translateY(0px) rotate(0deg); }
+        50% { transform: translateY(-20px) rotate(180deg); }
+    }
+    
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
     @keyframes shake {
         0%, 100% { transform: translateX(0); }
         10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
@@ -150,7 +365,7 @@
     }
     
     .btn-link:hover {
-        color: var(--bs-primary);
+        color: #667eea;
     }
     
     /* Mobile responsive */
@@ -160,10 +375,26 @@
             padding: 2rem 0;
         }
         
-        .card {
+        .login-card {
             margin: 1rem;
         }
+        
+        .login-left-panel {
+            min-height: 300px;
+        }
     }
+    
+    /* Form field animations */
+    .mb-3 {
+        animation: fadeInUp 1s ease both;
+    }
+    
+    .mb-3:nth-child(1) { animation-delay: 0.1s; }
+    .mb-3:nth-child(2) { animation-delay: 0.2s; }
+    .mb-3:nth-child(3) { animation-delay: 0.3s; }
+    .mb-4:nth-child(4) { animation-delay: 0.4s; }
+    .d-grid { animation-delay: 0.5s; }
+    .text-center:last-child { animation-delay: 0.6s; }
 </style>
 @endpush
 
