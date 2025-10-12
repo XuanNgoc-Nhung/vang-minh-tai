@@ -607,21 +607,21 @@
                         <span class="badge text-bg-primary rounded-pill me-2">WD</span>
                         <h5 class="mb-0 fw-bold text-primary">Web Đầu Tư</h5>
                     </div>
-                    <p class="text-light-emphasis mb-3">
+                    <p class="text-white mb-3">
                         Nền tảng đầu tư tài chính uy tín, minh bạch và hiệu quả. 
                         Chúng tôi cam kết mang đến những giải pháp đầu tư tốt nhất cho khách hàng.
                     </p>
                     <div class="d-flex gap-3">
-                        <a href="#" class="text-light-emphasis fs-5" title="Facebook">
+                        <a href="#" class="text-white fs-5" title="Facebook">
                             <i class="bi bi-facebook"></i>
                         </a>
-                        <a href="#" class="text-light-emphasis fs-5" title="Twitter">
+                        <a href="#" class="text-white fs-5" title="Twitter">
                             <i class="bi bi-twitter"></i>
                         </a>
-                        <a href="#" class="text-light-emphasis fs-5" title="LinkedIn">
+                        <a href="#" class="text-white fs-5" title="LinkedIn">
                             <i class="bi bi-linkedin"></i>
                         </a>
-                        <a href="#" class="text-light-emphasis fs-5" title="YouTube">
+                        <a href="#" class="text-white fs-5" title="YouTube">
                             <i class="bi bi-youtube"></i>
                         </a>
                     </div>
@@ -629,42 +629,39 @@
 
                 <!-- Contact Info -->
                 <div class="col-lg-6 col-md-6">
-                    <h6 class="fw-bold text-primary mb-3">
-                        <i class="bi bi-building me-2"></i>Thông tin công ty
-                    </h6>
                     <div class="mb-3">
                         <div class="d-flex align-items-start mb-2">
                             <i class="bi bi-building text-primary me-2 mt-1"></i>
                             <div>
-                                <strong class="text-light">Công ty TNHH Web Đầu Tư</strong>
+                                <strong class="text-light">Công ty TNHH Minh Tài Jewelry</strong>
                             </div>
                         </div>
                         <div class="d-flex align-items-start mb-2">
                             <i class="bi bi-receipt text-primary me-2 mt-1"></i>
                             <div>
-                                <span class="text-light-emphasis">Mã số thuế:</span>
-                                <span class="text-light ms-1">0123456789</span>
+                                <span class="text-white">Mã số thuế:</span>
+                                <span class="text-white ms-1">0123456789</span>
                             </div>
                         </div>
                         <div class="d-flex align-items-start mb-2">
                             <i class="bi bi-geo-alt text-primary me-2 mt-1"></i>
                             <div>
-                                <span class="text-light-emphasis">Địa chỉ:</span>
-                                <span class="text-light ms-1">123 Đường ABC, Quận XYZ, TP. Hồ Chí Minh</span>
+                                <span class="text-white">Địa chỉ:</span>
+                                <span class="text-white ms-1">123 Đường ABC, Quận XYZ, TP. Hồ Chí Minh</span>
                             </div>
                         </div>
                         <div class="d-flex align-items-start mb-2">
                             <i class="bi bi-telephone text-primary me-2 mt-1"></i>
                             <div>
-                                <span class="text-light-emphasis">Hotline:</span>
-                                <a href="tel:1900123456" class="text-light ms-1 text-decoration-none">1900 123 456</a>
+                                <span class="text-white">Hotline:</span>
+                                <a href="tel:1900123456" class="text-white ms-1 text-decoration-none">1900 123 456</a>
                             </div>
                         </div>
                         <div class="d-flex align-items-start">
                             <i class="bi bi-envelope text-primary me-2 mt-1"></i>
                             <div>
-                                <span class="text-light-emphasis">Email:</span>
-                                <a href="mailto:contact@webdautu.com" class="text-light ms-1 text-decoration-none">contact@webdautu.com</a>
+                                <span class="text-white">Email:</span>
+                                <a href="mailto:contact@webdautu.com" class="text-white ms-1 text-decoration-none">contact@webdautu.com</a>
                             </div>
                         </div>
                     </div>
@@ -676,14 +673,14 @@
             <hr class="my-4 border-secondary">
             <div class="row align-items-center">
                 <div class="col-md-6">
-                    <p class="text-light-emphasis mb-0">
+                    <p class="text-white mb-0">
                         © <span id="year"></span> Web Đầu Tư. Tất cả quyền được bảo lưu.
                     </p>
                 </div>
                 <div class="col-md-6 text-md-end">
                     <div class="d-flex flex-wrap justify-content-md-end gap-3">
-                        <a href="#" class="text-light-emphasis text-decoration-none small" data-bs-toggle="modal" data-bs-target="#termsModal">Điều khoản sử dụng</a>
-                        <a href="#" class="text-light-emphasis text-decoration-none small" data-bs-toggle="modal" data-bs-target="#privacyModal">Chính sách bảo mật</a>
+                        <a href="#" class="text-white text-decoration-none small" data-bs-toggle="modal" data-bs-target="#termsModal">Điều khoản sử dụng</a>
+                        <a href="#" class="text-white text-decoration-none small" data-bs-toggle="modal" data-bs-target="#privacyModal">Chính sách bảo mật</a>
                     </div>
                 </div>
             </div>
