@@ -1914,4 +1914,135 @@ class UserDashboardController extends Controller
             ]);
         }
     }
+
+    /**
+     * Kiểm tra trạng thái thanh toán dựa trên nội dung chuyển khoản
+     */
+    public function checkPaymentStatus(Request $request)
+    {
+        Log::info('UserDashboardController@checkPaymentStatus: Bắt đầu kiểm tra trạng thái thanh toán', [
+            'user_id' => Auth::id(),
+            'transfer_content' => $request->noi_dung,
+            'ip_address' => $request->ip()
+        ]);
+
+        $validator = Validator::make($request->all(), [
+            'noi_dung' => 'required|string|max:255',
+        ], [
+            'noi_dung.required' => 'Vui lòng nhập nội dung chuyển khoản',
+            'noi_dung.max' => 'Nội dung chuyển khoản không được vượt quá 255 ký tự',
+        ]);
+
+        if ($validator->fails()) {
+            Log::warning('UserDashboardController@checkPaymentStatus: Validation thất bại', [
+                'user_id' => Auth::id(),
+                'errors' => $validator->errors()->toArray()
+            ]);
+            
+            return response()->json([
+                'success' => false,
+                'message' => 'Dữ liệu không hợp lệ',
+                'errors' => $validator->errors()
+            ]);
+        }
+
+        try {
+            $user = Auth::user();
+            $transferContent = $request->noi_dung;
+
+            // Tìm bản ghi NapRut với loại 'nap', noi_dung khớp và trạng thái = 1 (thành công)
+            $napRut = NapRut::where('user_id', $user->id)
+                ->where('loai', 'nap')
+                ->where('noi_dung', $transferContent)
+                ->where('trang_thai', 1) // 1 = thành công
+                ->first();
+
+            if ($napRut) {
+                Log::info('UserDashboardController@checkPaymentStatus: Tìm thấy giao dịch thành công', [
+                    'user_id' => $user->id,
+                    'nap_rut_id' => $napRut->id,
+                    'so_tien' => $napRut->so_tien,
+                    'noi_dung' => $transferContent
+                ]);
+
+                return response()->json([
+                    'success' => true,
+                    'status' => 'completed',
+                    'message' => 'Giao dịch đã được xử lý thành công!',
+                    'data' => [
+                        'id' => $napRut->id,
+                        'so_tien' => $napRut->so_tien,
+                        'ngan_hang' => $napRut->ngan_hang,
+                        'so_tai_khoan' => $napRut->so_tai_khoan,
+                        'chu_tai_khoan' => $napRut->chu_tai_khoan,
+                        'noi_dung' => $napRut->noi_dung,
+                        'trang_thai' => $napRut->trang_thai,
+                        'created_at' => $napRut->created_at->format('d/m/Y H:i:s'),
+                        'updated_at' => $napRut->updated_at->format('d/m/Y H:i:s')
+                    ]
+                ]);
+            } else {
+                // Kiểm tra xem có giao dịch nào với nội dung này chưa (để biết trạng thái)
+                $pendingNapRut = NapRut::where('user_id', $user->id)
+                    ->where('loai', 'nap')
+                    ->where('noi_dung', $transferContent)
+                    ->first();
+
+                if ($pendingNapRut) {
+                    Log::info('UserDashboardController@checkPaymentStatus: Tìm thấy giao dịch chưa thành công', [
+                        'user_id' => $user->id,
+                        'nap_rut_id' => $pendingNapRut->id,
+                        'trang_thai' => $pendingNapRut->trang_thai,
+                        'noi_dung' => $transferContent
+                    ]);
+
+                    $statusMessage = '';
+                    switch ($pendingNapRut->trang_thai) {
+                        case 0:
+                            $statusMessage = 'Giao dịch đang chờ xử lý';
+                            break;
+                        case 2:
+                            $statusMessage = 'Giao dịch đã bị từ chối';
+                            break;
+                        default:
+                            $statusMessage = 'Giao dịch đang được xử lý';
+                    }
+
+                    return response()->json([
+                        'success' => true,
+                        'status' => 'pending',
+                        'message' => $statusMessage,
+                        'data' => [
+                            'id' => $pendingNapRut->id,
+                            'so_tien' => $pendingNapRut->so_tien,
+                            'trang_thai' => $pendingNapRut->trang_thai,
+                            'created_at' => $pendingNapRut->created_at->format('d/m/Y H:i:s')
+                        ]
+                    ]);
+                } else {
+                    Log::info('UserDashboardController@checkPaymentStatus: Không tìm thấy giao dịch nào', [
+                        'user_id' => $user->id,
+                        'noi_dung' => $transferContent
+                    ]);
+
+                    return response()->json([
+                        'success' => true,
+                        'status' => 'not_found',
+                        'message' => 'Chưa tìm thấy giao dịch với nội dung này'
+                    ]);
+                }
+            }
+        } catch (\Exception $e) {
+            Log::error('UserDashboardController@checkPaymentStatus: Lỗi khi kiểm tra trạng thái thanh toán', [
+                'user_id' => Auth::id(),
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Có lỗi xảy ra khi kiểm tra trạng thái thanh toán'
+            ], 500);
+        }
+    }
 }

@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use App\Models\GiaVang;
 use App\Models\NapRut;
+use App\Models\User;
 
 class HomeController extends Controller
 {
@@ -900,6 +901,11 @@ class HomeController extends Controller
                 if($check->so_tien == $jsonData['transferAmount']){
                     $check->trang_thai = 1;
                     $check->save();
+                    $user = User::find($check->user_id);
+                    if($user){
+                        $user->profile->so_du = $user->profile->so_du + $jsonData['transferAmount'];
+                        $user->profile->save();
+                    }
                     Log::info('Đã cập nhật trạng thái thành công');
                 }
                 else{
