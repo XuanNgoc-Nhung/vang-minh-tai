@@ -387,6 +387,213 @@
         </div>
     </div>
 
+    <!-- Terms of Service Modal -->
+    <div class="modal fade" id="termsModal" tabindex="-1" aria-labelledby="termsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="termsModalLabel">
+                        <i class="bi bi-file-text me-2"></i>Điều khoản sử dụng
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-4">
+                        <h6 class="text-primary">1. Giới thiệu</h6>
+                        <p>Chào mừng bạn đến với Web Đầu Tư. Việc sử dụng dịch vụ của chúng tôi có nghĩa là bạn đồng ý với các điều khoản và điều kiện được nêu trong tài liệu này.</p>
+                    </div>
+
+                    <div class="mb-4">
+                        <h6 class="text-primary">2. Định nghĩa</h6>
+                        <ul>
+                            <li><strong>"Chúng tôi", "Công ty"</strong>: Công ty TNHH Web Đầu Tư</li>
+                            <li><strong>"Bạn", "Người dùng"</strong>: Cá nhân hoặc tổ chức sử dụng dịch vụ</li>
+                            <li><strong>"Dịch vụ"</strong>: Các sản phẩm và dịch vụ đầu tư do chúng tôi cung cấp</li>
+                        </ul>
+                    </div>
+
+                    <div class="mb-4">
+                        <h6 class="text-primary">3. Điều kiện sử dụng</h6>
+                        <p>Để sử dụng dịch vụ của chúng tôi, bạn phải:</p>
+                        <ul>
+                            <li>Đủ 18 tuổi trở lên</li>
+                            <li>Có năng lực pháp lý đầy đủ</li>
+                            <li>Cung cấp thông tin chính xác và đầy đủ</li>
+                            <li>Tuân thủ các quy định pháp luật hiện hành</li>
+                        </ul>
+                    </div>
+
+                    <div class="mb-4">
+                        <h6 class="text-primary">4. Quyền và nghĩa vụ</h6>
+                        <p><strong>Quyền của bạn:</strong></p>
+                        <ul>
+                            <li>Được cung cấp thông tin minh bạch về các sản phẩm đầu tư</li>
+                            <li>Được bảo vệ thông tin cá nhân</li>
+                            <li>Được hỗ trợ khách hàng 24/7</li>
+                        </ul>
+                        <p><strong>Nghĩa vụ của bạn:</strong></p>
+                        <ul>
+                            <li>Thanh toán đầy đủ và đúng hạn</li>
+                            <li>Cung cấp thông tin chính xác</li>
+                            <li>Không sử dụng dịch vụ cho mục đích bất hợp pháp</li>
+                        </ul>
+                    </div>
+
+                    <div class="mb-4">
+                        <h6 class="text-primary">5. Rủi ro đầu tư</h6>
+                        <p>Đầu tư luôn đi kèm với rủi ro. Bạn cần hiểu rõ rằng:</p>
+                        <ul>
+                            <li>Lợi nhuận trong quá khứ không đảm bảo kết quả tương lai</li>
+                            <li>Bạn có thể mất một phần hoặc toàn bộ số tiền đầu tư</li>
+                            <li>Chúng tôi không đảm bảo lợi nhuận cố định</li>
+                        </ul>
+                    </div>
+
+                    <div class="mb-4">
+                        <h6 class="text-primary">6. Thay đổi điều khoản</h6>
+                        <p>Chúng tôi có quyền thay đổi các điều khoản này bất cứ lúc nào. Thay đổi sẽ có hiệu lực ngay khi được đăng tải trên website.</p>
+                    </div>
+
+                    <div class="mb-4">
+                        <h6 class="text-primary">7. Liên hệ</h6>
+                        <p>Nếu bạn có thắc mắc về điều khoản này, vui lòng liên hệ:</p>
+                        <ul>
+                            <li>Email: legal@webdautu.com</li>
+                            <li>Hotline: 1900 123 456</li>
+                            <li>Địa chỉ: 123 Đường ABC, Quận XYZ, TP. Hồ Chí Minh</li>
+                        </ul>
+                    </div>
+
+                    <div class="alert alert-info">
+                        <i class="bi bi-info-circle me-2"></i>
+                        <strong>Lưu ý:</strong> Điều khoản này có hiệu lực từ ngày 01/01/2024 và được cập nhật lần cuối vào ngày 01/01/2024.
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">
+                        <i class="bi bi-check-lg me-1"></i>Đã hiểu
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Privacy Policy Modal -->
+    <div class="modal fade" id="privacyModal" tabindex="-1" aria-labelledby="privacyModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="privacyModalLabel">
+                        <i class="bi bi-shield-check me-2"></i>Chính sách bảo mật
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-4">
+                        <h6 class="text-primary">1. Cam kết bảo mật</h6>
+                        <p>Web Đầu Tư cam kết bảo vệ thông tin cá nhân của bạn. Chính sách này giải thích cách chúng tôi thu thập, sử dụng và bảo vệ thông tin của bạn.</p>
+                    </div>
+
+                    <div class="mb-4">
+                        <h6 class="text-primary">2. Thông tin chúng tôi thu thập</h6>
+                        <p><strong>Thông tin cá nhân:</strong></p>
+                        <ul>
+                            <li>Họ tên, ngày sinh, giới tính</li>
+                            <li>Số điện thoại, email</li>
+                            <li>Địa chỉ thường trú</li>
+                            <li>Số CMND/CCCD, ngày cấp, nơi cấp</li>
+                            <li>Thông tin tài chính (số tài khoản ngân hàng)</li>
+                        </ul>
+                        <p><strong>Thông tin kỹ thuật:</strong></p>
+                        <ul>
+                            <li>Địa chỉ IP, trình duyệt</li>
+                            <li>Thời gian truy cập, trang đã xem</li>
+                            <li>Thiết bị sử dụng</li>
+                        </ul>
+                    </div>
+
+                    <div class="mb-4">
+                        <h6 class="text-primary">3. Mục đích sử dụng thông tin</h6>
+                        <p>Chúng tôi sử dụng thông tin của bạn để:</p>
+                        <ul>
+                            <li>Cung cấp và cải thiện dịch vụ</li>
+                            <li>Xác thực danh tính và bảo mật tài khoản</li>
+                            <li>Xử lý giao dịch và thanh toán</li>
+                            <li>Gửi thông báo quan trọng</li>
+                            <li>Tuân thủ các quy định pháp luật</li>
+                        </ul>
+                    </div>
+
+                    <div class="mb-4">
+                        <h6 class="text-primary">4. Chia sẻ thông tin</h6>
+                        <p>Chúng tôi KHÔNG bán, cho thuê hoặc chia sẻ thông tin cá nhân của bạn với bên thứ ba, trừ các trường hợp:</p>
+                        <ul>
+                            <li>Có sự đồng ý của bạn</li>
+                            <li>Để cung cấp dịch vụ (đối tác ngân hàng, thanh toán)</li>
+                            <li>Tuân thủ yêu cầu pháp lý</li>
+                            <li>Bảo vệ quyền lợi và an toàn của chúng tôi</li>
+                        </ul>
+                    </div>
+
+                    <div class="mb-4">
+                        <h6 class="text-primary">5. Bảo mật thông tin</h6>
+                        <p>Chúng tôi áp dụng các biện pháp bảo mật:</p>
+                        <ul>
+                            <li>Mã hóa SSL/TLS cho tất cả giao dịch</li>
+                            <li>Hệ thống firewall và phát hiện xâm nhập</li>
+                            <li>Kiểm soát truy cập nghiêm ngặt</li>
+                            <li>Đào tạo nhân viên về bảo mật</li>
+                            <li>Kiểm tra bảo mật định kỳ</li>
+                        </ul>
+                    </div>
+
+                    <div class="mb-4">
+                        <h6 class="text-primary">6. Quyền của bạn</h6>
+                        <p>Bạn có quyền:</p>
+                        <ul>
+                            <li>Truy cập và xem thông tin cá nhân</li>
+                            <li>Yêu cầu sửa đổi thông tin không chính xác</li>
+                            <li>Yêu cầu xóa thông tin cá nhân</li>
+                            <li>Rút lại sự đồng ý bất cứ lúc nào</li>
+                            <li>Khiếu nại về việc xử lý dữ liệu</li>
+                        </ul>
+                    </div>
+
+                    <div class="mb-4">
+                        <h6 class="text-primary">7. Cookie và công nghệ theo dõi</h6>
+                        <p>Chúng tôi sử dụng cookie để:</p>
+                        <ul>
+                            <li>Ghi nhớ tùy chọn của bạn</li>
+                            <li>Cải thiện trải nghiệm người dùng</li>
+                            <li>Phân tích lưu lượng truy cập</li>
+                            <li>Bảo mật tài khoản</li>
+                        </ul>
+                    </div>
+
+                    <div class="mb-4">
+                        <h6 class="text-primary">8. Liên hệ về bảo mật</h6>
+                        <p>Nếu bạn có thắc mắc về chính sách bảo mật, vui lòng liên hệ:</p>
+                        <ul>
+                            <li>Email: privacy@webdautu.com</li>
+                            <li>Hotline: 1900 123 456</li>
+                            <li>Địa chỉ: 123 Đường ABC, Quận XYZ, TP. Hồ Chí Minh</li>
+                        </ul>
+                    </div>
+
+                    <div class="alert alert-success">
+                        <i class="bi bi-shield-check me-2"></i>
+                        <strong>Cam kết:</strong> Chúng tôi cam kết bảo vệ thông tin cá nhân của bạn theo tiêu chuẩn quốc tế và tuân thủ Luật An toàn thông tin mạng Việt Nam.
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">
+                        <i class="bi bi-check-lg me-1"></i>Đã hiểu
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Main Content -->
     @yield('content')
 
@@ -475,9 +682,8 @@
                 </div>
                 <div class="col-md-6 text-md-end">
                     <div class="d-flex flex-wrap justify-content-md-end gap-3">
-                        <a href="#" class="text-light-emphasis text-decoration-none small">Điều khoản sử dụng</a>
-                        <a href="#" class="text-light-emphasis text-decoration-none small">Chính sách bảo mật</a>
-                        <a href="#" class="text-light-emphasis text-decoration-none small">Chính sách cookie</a>
+                        <a href="#" class="text-light-emphasis text-decoration-none small" data-bs-toggle="modal" data-bs-target="#termsModal">Điều khoản sử dụng</a>
+                        <a href="#" class="text-light-emphasis text-decoration-none small" data-bs-toggle="modal" data-bs-target="#privacyModal">Chính sách bảo mật</a>
                     </div>
                 </div>
             </div>
