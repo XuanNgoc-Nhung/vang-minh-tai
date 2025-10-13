@@ -1,42 +1,95 @@
 <!doctype html>
 <html lang="vi">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', 'Web Đầu Tư - Landing Page')</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <title>@yield('title', 'Minh Tài Jewelry - Landing Page')</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     @stack('styles')
     <style>
-        :root{
-            --bs-primary:#16a34a; /* green */
-            --bs-primary-rgb:22,163,74;
-            --bs-link-color:#16a34a;
-            --bs-link-hover-color:#15803d;
+        :root {
+            --bs-primary: #16a34a;
+            /* green */
+            --bs-primary-rgb: 22, 163, 74;
+            --bs-link-color: #16a34a;
+            --bs-link-hover-color: #15803d;
         }
-        .btn-primary{
-            --bs-btn-bg:var(--bs-primary);
-            --bs-btn-border-color:var(--bs-primary);
-            --bs-btn-hover-bg:#15803d;
-            --bs-btn-hover-border-color:#15803d;
-            --bs-btn-active-bg:#166534;
-            --bs-btn-active-border-color:#166534;
+
+        .btn-primary {
+            --bs-btn-bg: var(--bs-primary);
+            --bs-btn-border-color: var(--bs-primary);
+            --bs-btn-hover-bg: #15803d;
+            --bs-btn-hover-border-color: #15803d;
+            --bs-btn-active-bg: #166534;
+            --bs-btn-active-border-color: #166534;
         }
-        .badge.text-bg-primary{background-color:rgba(var(--bs-primary-rgb),1)!important}
+
+        .badge.text-bg-primary {
+            background-color: rgba(var(--bs-primary-rgb), 1) !important
+        }
+
         /* Navbar inherits primary (green) */
-        .navbar .nav-link{position:relative;color:#fff!important;opacity:.9;transition:opacity .2s ease,color .2s ease}
-        .navbar .nav-link:hover,.navbar .nav-link:focus{opacity:1;color:#ffd54f!important}
-        .navbar .nav-link::after{content:"";position:absolute;left:0;right:auto;bottom:-.25rem;height:2px;width:0;background:#fff;transition:width .25s ease}
-        .navbar .nav-link:hover::after,.navbar .nav-link:focus::after{width:100%}
-        .navbar .nav-link.active{opacity:1;color:#ffd54f!important}
-        .navbar .nav-link.active::after{width:100%}
+        .navbar .nav-link {
+            position: relative;
+            color: #fff !important;
+            opacity: .9;
+            transition: opacity .2s ease, color .2s ease
+        }
+
+        .navbar .nav-link:hover,
+        .navbar .nav-link:focus {
+            opacity: 1;
+            color: #ffd54f !important
+        }
+
+        .navbar .nav-link::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            right: auto;
+            bottom: -.25rem;
+            height: 2px;
+            width: 0;
+            background: #fff;
+            transition: width .25s ease
+        }
+
+        .navbar .nav-link:hover::after,
+        .navbar .nav-link:focus::after {
+            width: 100%
+        }
+
+        .navbar .nav-link.active {
+            opacity: 1;
+            color: #ffd54f !important
+        }
+
+        .navbar .nav-link.active::after {
+            width: 100%
+        }
+
         /* Back to top */
-        #backToTop{position:fixed;right:16px;bottom:16px;z-index:1050;opacity:0;visibility:hidden;transition:opacity .2s ease,visibility .2s ease}
-        #backToTop.show{opacity:1;visibility:visible}
-        
+        #backToTop {
+            position: fixed;
+            left: 16px;
+            bottom: 16px;
+            z-index: 1050;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity .2s ease, visibility .2s ease
+        }
+
+        #backToTop.show {
+            opacity: 1;
+            visibility: visible
+        }
+
         /* Back to top button styling */
         #backToTop {
             width: 50px;
@@ -48,7 +101,7 @@
             font-size: 1.2rem;
             font-weight: bold;
         }
-        
+
         /* Mobile responsive for back to top button */
         @media (max-width: 576px) {
             #backToTop {
@@ -59,91 +112,236 @@
                 font-size: 1.1rem;
             }
         }
+
         /* Full-width banner with background image */
-        .banner-cover{position:relative;color:#fff;background-position:center;background-size:cover;background-repeat:no-repeat;min-height:520px;display:flex;align-items:center}
-        .banner-cover::before{content:"";position:absolute;inset:0;background:rgba(0,0,0,.35)}
-        .banner-cover .content{position:relative}
+        .banner-cover {
+            position: relative;
+            color: #fff;
+            background-position: center;
+            background-size: cover;
+            background-repeat: no-repeat;
+            min-height: 520px;
+            display: flex;
+            align-items: center
+        }
+
+        .banner-cover::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, .35)
+        }
+
+        .banner-cover .content {
+            position: relative
+        }
+
         /* Common hovers */
-        .card.hover-lift, .feature-card{transition:transform .25s ease, box-shadow .25s ease}
-        .card.hover-lift:hover, .feature-card:hover{transform:none;box-shadow:0 .75rem 1.5rem rgba(0,0,0,.08)}
+        .card.hover-lift,
+        .feature-card {
+            transition: transform .25s ease, box-shadow .25s ease
+        }
+
+        .card.hover-lift:hover,
+        .feature-card:hover {
+            transform: none;
+            box-shadow: 0 .75rem 1.5rem rgba(0, 0, 0, .08)
+        }
+
         /* Icon circle */
-        .icon-circle{display:inline-flex;align-items:center;justify-content:center;width:48px;height:48px;border-radius:50%;background:rgba(var(--bs-primary-rgb),.1);color:var(--bs-primary)}
+        .icon-circle {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: rgba(var(--bs-primary-rgb), .1);
+            color: var(--bs-primary)
+        }
+
         /* Stepper timeline */
-        .stepper{position:relative;margin-left:.5rem}
-        .step{position:relative}
-        .step .step-index{position:relative;z-index:1}
+        .stepper {
+            position: relative;
+            margin-left: .5rem
+        }
+
+        .step {
+            position: relative
+        }
+
+        .step .step-index {
+            position: relative;
+            z-index: 1
+        }
+
         /* Accordion polish */
-        .accordion .accordion-item{border:none;border-radius:1rem;box-shadow:0 .5rem 1rem rgba(0,0,0,.06);overflow:hidden}
-        .accordion-button{gap:.5rem}
-        .accordion-button:not(.collapsed){color:#0f5132;background:rgba(var(--bs-primary-rgb),.08)}
+        .accordion .accordion-item {
+            border: none;
+            border-radius: 1rem;
+            box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .06);
+            overflow: hidden
+        }
+
+        .accordion-button {
+            gap: .5rem
+        }
+
+        .accordion-button:not(.collapsed) {
+            color: #0f5132;
+            background: rgba(var(--bs-primary-rgb), .08)
+        }
+
         /* Project card lift */
-        .card.h-100{transition:transform .25s ease, box-shadow .25s ease}
-        .card.h-100:hover{transform:none;box-shadow:0 .75rem 1.5rem rgba(0,0,0,.08)}
+        .card.h-100 {
+            transition: transform .25s ease, box-shadow .25s ease
+        }
+
+        .card.h-100:hover {
+            transform: none;
+            box-shadow: 0 .75rem 1.5rem rgba(0, 0, 0, .08)
+        }
+
         /* Soft section backgrounds */
-        .bg-soft-primary{background:linear-gradient(180deg, rgba(var(--bs-primary-rgb),.06), rgba(var(--bs-primary-rgb),.03))}
-        .bg-soft-gray{background:linear-gradient(180deg, rgba(0,0,0,.03), rgba(0,0,0,.015))}
+        .bg-soft-primary {
+            background: linear-gradient(180deg, rgba(var(--bs-primary-rgb), .06), rgba(var(--bs-primary-rgb), .03))
+        }
+
+        .bg-soft-gray {
+            background: linear-gradient(180deg, rgba(0, 0, 0, .03), rgba(0, 0, 0, .015))
+        }
+
         /* Vivid alternating tints for sections */
-        .bg-tint-green{background:linear-gradient(180deg, rgba(22,163,74,.38), rgba(22,163,74,.22))}
-        .bg-tint-teal{background:linear-gradient(180deg, rgba(13,148,136,.38), rgba(13,148,136,.22))}
-        .bg-tint-amber{background:linear-gradient(180deg, rgba(245,158,11,.40), rgba(245,158,11,.22))}
-        .bg-tint-sky{background:linear-gradient(180deg, rgba(2,132,199,.40), rgba(2,132,199,.22))}
-        .bg-tint-slate{background:linear-gradient(180deg, rgba(71,85,105,.34), rgba(71,85,105,.18))}
+        .bg-tint-green {
+            background: linear-gradient(180deg, rgba(22, 163, 74, .38), rgba(22, 163, 74, .22))
+        }
+
+        .bg-tint-teal {
+            background: linear-gradient(180deg, rgba(13, 148, 136, .38), rgba(13, 148, 136, .22))
+        }
+
+        .bg-tint-amber {
+            background: linear-gradient(180deg, rgba(245, 158, 11, .40), rgba(245, 158, 11, .22))
+        }
+
+        .bg-tint-sky {
+            background: linear-gradient(180deg, rgba(2, 132, 199, .40), rgba(2, 132, 199, .22))
+        }
+
+        .bg-tint-slate {
+            background: linear-gradient(180deg, rgba(71, 85, 105, .34), rgba(71, 85, 105, .18))
+        }
+
         /* Global animated soft gradient background */
-        body.global-animated-bg{
-            min-height:100vh;
+        body.global-animated-bg {
+            min-height: 100vh;
             background:
-                radial-gradient(60% 80% at 0% 0%, rgba(22,163,74,.28) 0%, rgba(22,163,74,0) 50%),
-                radial-gradient(60% 80% at 100% 0%, rgba(2,132,199,.26) 0%, rgba(2,132,199,0) 50%),
-                radial-gradient(60% 80% at 0% 100%, rgba(13,148,136,.24) 0%, rgba(13,148,136,0) 50%),
-                radial-gradient(60% 80% at 100% 100%, rgba(245,158,11,.22) 0%, rgba(245,158,11,0) 50%),
+                radial-gradient(60% 80% at 0% 0%, rgba(22, 163, 74, .28) 0%, rgba(22, 163, 74, 0) 50%),
+                radial-gradient(60% 80% at 100% 0%, rgba(2, 132, 199, .26) 0%, rgba(2, 132, 199, 0) 50%),
+                radial-gradient(60% 80% at 0% 100%, rgba(13, 148, 136, .24) 0%, rgba(13, 148, 136, 0) 50%),
+                radial-gradient(60% 80% at 100% 100%, rgba(245, 158, 11, .22) 0%, rgba(245, 158, 11, 0) 50%),
                 linear-gradient(180deg, #f7fafc 0%, #eef2f7 100%);
             background-attachment: fixed;
             position: relative;
         }
-        body.global-animated-bg::before{
-            content:"";
-            position:fixed;
-            inset:-10% -10% -10% -10%;
-            background: radial-gradient(1200px 1200px at var(--spot-x,20%) var(--spot-y,30%), rgba(22,163,74,.08), transparent 60%);
-            pointer-events:none;
+
+        body.global-animated-bg::before {
+            content: "";
+            position: fixed;
+            inset: -10% -10% -10% -10%;
+            background: radial-gradient(1200px 1200px at var(--spot-x, 20%) var(--spot-y, 30%), rgba(22, 163, 74, .08), transparent 60%);
+            pointer-events: none;
             animation: bgFloat 12s ease-in-out infinite alternate;
             filter: blur(0.5px);
         }
-        @keyframes bgFloat{ 
-            0%{ --spot-x:20%; --spot-y:30%; }
-            50%{ --spot-x:80%; --spot-y:40%; }
-            100%{ --spot-x:35%; --spot-y:75%; }
+
+        @keyframes bgFloat {
+            0% {
+                --spot-x: 20%;
+                --spot-y: 30%;
+            }
+
+            50% {
+                --spot-x: 80%;
+                --spot-y: 40%;
+            }
+
+            100% {
+                --spot-x: 35%;
+                --spot-y: 75%;
+            }
         }
+
         /* Corner-driven gradient background */
-        .bg-corners-brand{
+        .bg-corners-brand {
             background:
-                radial-gradient(60% 80% at 0% 0%, rgba(22,163,74,.44) 0%, rgba(22,163,74,0) 50%),
-                radial-gradient(60% 80% at 100% 0%, rgba(2,132,199,.40) 0%, rgba(2,132,199,0) 50%),
-                radial-gradient(60% 80% at 0% 100%, rgba(13,148,136,.40) 0%, rgba(13,148,136,0) 50%),
-                radial-gradient(60% 80% at 100% 100%, rgba(245,158,11,.40) 0%, rgba(245,158,11,0) 50%),
+                radial-gradient(60% 80% at 0% 0%, rgba(22, 163, 74, .44) 0%, rgba(22, 163, 74, 0) 50%),
+                radial-gradient(60% 80% at 100% 0%, rgba(2, 132, 199, .40) 0%, rgba(2, 132, 199, 0) 50%),
+                radial-gradient(60% 80% at 0% 100%, rgba(13, 148, 136, .40) 0%, rgba(13, 148, 136, 0) 50%),
+                radial-gradient(60% 80% at 100% 100%, rgba(245, 158, 11, .40) 0%, rgba(245, 158, 11, 0) 50%),
                 linear-gradient(180deg, #f7f9fb 0%, #eef2f6 100%);
         }
+
         /* Feature card color variants */
-        .feature-card.fc-green{background:linear-gradient(180deg, rgba(22,163,74,.12), rgba(22,163,74,.06))}
-        .feature-card.fc-teal{background:linear-gradient(180deg, rgba(13,148,136,.12), rgba(13,148,136,.06))}
-        .feature-card.fc-amber{background:linear-gradient(180deg, rgba(245,158,11,.14), rgba(245,158,11,.07))}
-        .feature-card.fc-sky{background:linear-gradient(180deg, rgba(2,132,199,.14), rgba(2,132,199,.07))}
-        .feature-card.fc-rose{background:linear-gradient(180deg, rgba(244,63,94,.14), rgba(244,63,94,.07))}
-        .feature-card.fc-indigo{background:linear-gradient(180deg, rgba(79,70,229,.14), rgba(79,70,229,.07))}
+        .feature-card.fc-green {
+            background: linear-gradient(180deg, rgba(22, 163, 74, .12), rgba(22, 163, 74, .06))
+        }
+
+        .feature-card.fc-teal {
+            background: linear-gradient(180deg, rgba(13, 148, 136, .12), rgba(13, 148, 136, .06))
+        }
+
+        .feature-card.fc-amber {
+            background: linear-gradient(180deg, rgba(245, 158, 11, .14), rgba(245, 158, 11, .07))
+        }
+
+        .feature-card.fc-sky {
+            background: linear-gradient(180deg, rgba(2, 132, 199, .14), rgba(2, 132, 199, .07))
+        }
+
+        .feature-card.fc-rose {
+            background: linear-gradient(180deg, rgba(244, 63, 94, .14), rgba(244, 63, 94, .07))
+        }
+
+        .feature-card.fc-indigo {
+            background: linear-gradient(180deg, rgba(79, 70, 229, .14), rgba(79, 70, 229, .07))
+        }
+
         /* FAQ Q/A distinct colors */
-        .faq-question{color:#0f5132}
-        .faq-answer{color:#374151}
-        .accordion-button.faq-question i{color:#0f5132!important}
+        .faq-question {
+            color: #0f5132
+        }
+
+        .faq-answer {
+            color: #374151
+        }
+
+        .accordion-button.faq-question i {
+            color: #0f5132 !important
+        }
+
         /* Typing effect */
-        .typing{border-right:.1em solid #fff;white-space:nowrap;overflow:hidden}
-        @keyframes caretBlink{50%{border-color:transparent}}
-        .typing{animation:caretBlink .8s step-end infinite}
-        
+        .typing {
+            border-right: .1em solid #fff;
+            white-space: nowrap;
+            overflow: hidden
+        }
+
+        @keyframes caretBlink {
+            50% {
+                border-color: transparent
+            }
+        }
+
+        .typing {
+            animation: caretBlink .8s step-end infinite
+        }
+
         /* Toast styles */
         .toast-container {
             z-index: 1055;
         }
-        
+
         .toast {
             min-width: 300px;
             box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
@@ -151,63 +349,70 @@
             border-radius: 0.5rem;
             overflow: hidden;
         }
-        
+
         .toast.success {
             box-shadow: 0 0.5rem 1rem rgba(25, 135, 84, 0.25), 0 0.25rem 0.5rem rgba(25, 135, 84, 0.1);
         }
-        
+
         .toast.error {
             box-shadow: 0 0.5rem 1rem rgba(220, 53, 69, 0.15), 0 0.25rem 0.5rem rgba(220, 53, 69, 0.05);
         }
-        
+
         .toast.warning {
             box-shadow: 0 0.5rem 1rem rgba(253, 126, 20, 0.25), 0 0.25rem 0.5rem rgba(253, 126, 20, 0.1);
         }
-        
+
         .toast.info {
             box-shadow: 0 0.5rem 1rem rgba(13, 202, 240, 0.25), 0 0.25rem 0.5rem rgba(13, 202, 240, 0.1);
         }
-        
+
         .toast-header {
             background-color: #fff;
             border-bottom: 1px solid rgba(0, 0, 0, 0.1);
             padding: 0.75rem 1rem;
         }
-        
+
         .toast-header.success {
             background-color: #198754;
             border-bottom-color: #198754;
             color: #fff;
         }
-        
+
         .toast-header.error {
             background-color: #dc3545;
             border-bottom-color: #dc3545;
             color: #fff;
         }
-        
+
         .toast-header.warning {
             background-color: #ffc107;
             border-bottom-color: #ffc107;
             color: #212529;
         }
-        
+
         .toast-header.info {
             background-color: #0dcaf0;
             border-bottom-color: #0dcaf0;
             color: #fff;
         }
-        
-        .toast-header .toast-title { font-weight: 600; color: inherit; }
+
+        .toast-header .toast-title {
+            font-weight: 600;
+            color: inherit;
+        }
+
         .toast-header.success .btn-close,
         .toast-header.error .btn-close,
-        .toast-header.info .btn-close { filter: invert(1) grayscale(100%); opacity: .9; }
-        
+        .toast-header.info .btn-close {
+            filter: invert(1) grayscale(100%);
+            opacity: .9;
+        }
+
         .toast-body {
             background-color: #fff;
             color: #212529;
         }
-        
+
         /* Mobile responsive for toast */
         @media (max-width: 576px) {
             .toast-container {
@@ -215,7 +420,7 @@
                 right: 1rem !important;
                 /* left: 1rem !important; */
             }
-            
+
             .toast {
                 min-width: auto;
                 width: 100%;
@@ -226,17 +431,20 @@
         .sidebar-menu {
             background: white;
             border-radius: 7px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
             padding: 6px;
             margin-bottom: 2rem;
-            border:1px solid #cdc4c4
+            border: 1px solid #cdc4c4
         }
+
         .menu-section:last-child {
             margin-bottom: 0;
         }
-        .content-sidebar{
+
+        .content-sidebar {
             padding-right: 0
         }
+
         .menu-title {
             color: #2c3e50;
             font-weight: 600;
@@ -291,7 +499,7 @@
         .dashboard-card {
             background: white;
             border-radius: 12px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
             border: none;
             transition: all 0.3s ease;
             height: 100%;
@@ -299,7 +507,7 @@
 
         .dashboard-card:hover {
             transform: none;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
         }
 
         .card-header {
@@ -335,7 +543,7 @@
         .user-avatar-large {
             text-align: center;
         }
-        
+
         .avatar-circle {
             width: 120px;
             height: 120px;
@@ -350,13 +558,21 @@
             font-weight: bold;
             box-shadow: 0 8px 25px rgba(22, 163, 74, 0.3);
         }
+
         /* Navbar dropdown hover (desktop) */
         @media (min-width: 992px) {
-            .navbar .dropdown:hover .dropdown-menu { display:block; }
-            .navbar .dropdown-toggle::after { vertical-align: .15em; }
+            .navbar .dropdown:hover .dropdown-menu {
+                display: block;
+            }
+
+            .navbar .dropdown-toggle::after {
+                vertical-align: .15em;
+            }
         }
+
     </style>
 </head>
+
 <body class="global-animated-bg" data-bs-spy="scroll" data-bs-target="#navbarNav" data-bs-offset="80" tabindex="0">
     <!-- Header -->
     @include('components.navbar')
@@ -367,7 +583,8 @@
     </div>
 
     <!-- Global Confirm Modal -->
-    <div class="modal fade" id="globalConfirmModal" tabindex="-1" aria-labelledby="globalConfirmModalLabel" aria-hidden="true">
+    <div class="modal fade" id="globalConfirmModal" tabindex="-1" aria-labelledby="globalConfirmModalLabel"
+        aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
@@ -400,13 +617,14 @@
                 <div class="modal-body">
                     <div class="mb-4">
                         <h6 class="text-primary">1. Giới thiệu</h6>
-                        <p>Chào mừng bạn đến với Web Đầu Tư. Việc sử dụng dịch vụ của chúng tôi có nghĩa là bạn đồng ý với các điều khoản và điều kiện được nêu trong tài liệu này.</p>
+                        <p>Chào mừng bạn đến với Minh Tài Jewelry. Việc sử dụng dịch vụ của chúng tôi có nghĩa là bạn
+                            đồng ý với các điều khoản và điều kiện được nêu trong tài liệu này.</p>
                     </div>
 
                     <div class="mb-4">
                         <h6 class="text-primary">2. Định nghĩa</h6>
                         <ul>
-                            <li><strong>"Chúng tôi", "Công ty"</strong>: Công ty TNHH Web Đầu Tư</li>
+                            <li><strong>"Chúng tôi", "Công ty"</strong>: Công ty TNHH Minh Tài Jewelry</li>
                             <li><strong>"Bạn", "Người dùng"</strong>: Cá nhân hoặc tổ chức sử dụng dịch vụ</li>
                             <li><strong>"Dịch vụ"</strong>: Các sản phẩm và dịch vụ đầu tư do chúng tôi cung cấp</li>
                         </ul>
@@ -451,7 +669,8 @@
 
                     <div class="mb-4">
                         <h6 class="text-primary">6. Thay đổi điều khoản</h6>
-                        <p>Chúng tôi có quyền thay đổi các điều khoản này bất cứ lúc nào. Thay đổi sẽ có hiệu lực ngay khi được đăng tải trên website.</p>
+                        <p>Chúng tôi có quyền thay đổi các điều khoản này bất cứ lúc nào. Thay đổi sẽ có hiệu lực ngay
+                            khi được đăng tải trên website.</p>
                     </div>
 
                     <div class="mb-4">
@@ -466,7 +685,8 @@
 
                     <div class="alert alert-info">
                         <i class="bi bi-info-circle me-2"></i>
-                        <strong>Lưu ý:</strong> Điều khoản này có hiệu lực từ ngày 01/01/2024 và được cập nhật lần cuối vào ngày 01/01/2024.
+                        <strong>Lưu ý:</strong> Điều khoản này có hiệu lực từ ngày 01/01/2024 và được cập nhật lần cuối
+                        vào ngày 01/01/2024.
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -491,7 +711,8 @@
                 <div class="modal-body">
                     <div class="mb-4">
                         <h6 class="text-primary">1. Cam kết bảo mật</h6>
-                        <p>Web Đầu Tư cam kết bảo vệ thông tin cá nhân của bạn. Chính sách này giải thích cách chúng tôi thu thập, sử dụng và bảo vệ thông tin của bạn.</p>
+                        <p>Minh Tài Jewelry cam kết bảo vệ thông tin cá nhân của bạn. Chính sách này giải thích cách
+                            chúng tôi thu thập, sử dụng và bảo vệ thông tin của bạn.</p>
                     </div>
 
                     <div class="mb-4">
@@ -526,7 +747,8 @@
 
                     <div class="mb-4">
                         <h6 class="text-primary">4. Chia sẻ thông tin</h6>
-                        <p>Chúng tôi KHÔNG bán, cho thuê hoặc chia sẻ thông tin cá nhân của bạn với bên thứ ba, trừ các trường hợp:</p>
+                        <p>Chúng tôi KHÔNG bán, cho thuê hoặc chia sẻ thông tin cá nhân của bạn với bên thứ ba, trừ các
+                            trường hợp:</p>
                         <ul>
                             <li>Có sự đồng ý của bạn</li>
                             <li>Để cung cấp dịch vụ (đối tác ngân hàng, thanh toán)</li>
@@ -582,7 +804,8 @@
 
                     <div class="alert alert-success">
                         <i class="bi bi-shield-check me-2"></i>
-                        <strong>Cam kết:</strong> Chúng tôi cam kết bảo vệ thông tin cá nhân của bạn theo tiêu chuẩn quốc tế và tuân thủ Luật An toàn thông tin mạng Việt Nam.
+                        <strong>Cam kết:</strong> Chúng tôi cam kết bảo vệ thông tin cá nhân của bạn theo tiêu chuẩn
+                        quốc tế và tuân thủ Luật An toàn thông tin mạng Việt Nam.
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -604,11 +827,11 @@
                 <!-- Company Info -->
                 <div class="col-lg-6 col-md-6">
                     <div class="d-flex align-items-center mb-3">
-                        <span class="badge text-bg-primary rounded-pill me-2">WD</span>
-                        <h5 class="mb-0 fw-bold text-primary">Web Đầu Tư</h5>
+                        <span class="badge text-bg-primary rounded-pill me-2">MTJ</span>
+                        <h5 class="mb-0 fw-bold text-primary">Minh Tài Jewelry</h5>
                     </div>
                     <p class="text-white mb-3">
-                        Nền tảng đầu tư tài chính uy tín, minh bạch và hiệu quả. 
+                        Nền tảng đầu tư tài chính uy tín, minh bạch và hiệu quả.
                         Chúng tôi cam kết mang đến những giải pháp đầu tư tốt nhất cho khách hàng.
                     </p>
                     <div class="d-flex gap-3">
@@ -639,8 +862,8 @@
                         <div class="d-flex align-items-start mb-2">
                             <i class="bi bi-receipt text-primary me-2 mt-1"></i>
                             <div>
-                                <span class="text-white">Mã số thuế:</span>
-                                <span class="text-white ms-1">0123456789</span>
+                                <span class="text-white">Mã doanh nghiệp:</span>
+                                <span class="text-white ms-1">{{$cauHinh->ma_so_doanh_nghiep}}</span>
                             </div>
                         </div>
                         <div class="d-flex align-items-start mb-2">
@@ -661,7 +884,8 @@
                             <i class="bi bi-envelope text-primary me-2 mt-1"></i>
                             <div>
                                 <span class="text-white">Email:</span>
-                                <a href="mailto:contact@webdautu.com" class="text-white ms-1 text-decoration-none">contact@webdautu.com</a>
+                                <a href="mailto:contact@webdautu.com"
+                                    class="text-white ms-1 text-decoration-none">contact@webdautu.com</a>
                             </div>
                         </div>
                     </div>
@@ -674,13 +898,15 @@
             <div class="row align-items-center">
                 <div class="col-md-6">
                     <p class="text-white mb-0">
-                        © <span id="year"></span> Web Đầu Tư. Tất cả quyền được bảo lưu.
+                        © <span id="year"></span> Minh Tài Jewelry. Tất cả quyền được bảo lưu.
                     </p>
                 </div>
                 <div class="col-md-6 text-md-end">
                     <div class="d-flex flex-wrap justify-content-md-end gap-3">
-                        <a href="#" class="text-white text-decoration-none small" data-bs-toggle="modal" data-bs-target="#termsModal">Điều khoản sử dụng</a>
-                        <a href="#" class="text-white text-decoration-none small" data-bs-toggle="modal" data-bs-target="#privacyModal">Chính sách bảo mật</a>
+                        <a href="#" class="text-white text-decoration-none small" data-bs-toggle="modal"
+                            data-bs-target="#termsModal">Điều khoản sử dụng</a>
+                        <a href="#" class="text-white text-decoration-none small" data-bs-toggle="modal"
+                            data-bs-target="#privacyModal">Chính sách bảo mật</a>
                     </div>
                 </div>
             </div>
@@ -688,9 +914,12 @@
     </footer>
 
     <!-- Back to Top Button -->
-    <button id="backToTop" class="btn btn-primary rounded-circle p-3" aria-label="Back to top" title="Lên đầu trang">↑</button>
+    <button id="backToTop" class="btn btn-primary rounded-circle p-3" aria-label="Back to top"
+        title="Lên đầu trang">↑</button>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
+    </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="{{ asset('js/toast.js') }}"></script>
@@ -699,26 +928,40 @@
     @stack('scripts')
     <script>
         document.getElementById('year').textContent = new Date().getFullYear();
-        
+
         // Back to top visibility + smooth scroll
         const btt = document.getElementById('backToTop');
         window.addEventListener('scroll', () => {
-            if (window.scrollY > 200) { btt.classList.add('show'); } else { btt.classList.remove('show'); }
+            if (window.scrollY > 200) {
+                btt.classList.add('show');
+            } else {
+                btt.classList.remove('show');
+            }
         });
-        btt.addEventListener('click', () => { window.scrollTo({ top: 0, behavior: 'smooth' }); });
-        
+        btt.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
         // WOW.js init
-        if (typeof WOW === 'function') { new WOW().init(); }
-        
+        if (typeof WOW === 'function') {
+            new WOW().init();
+        }
+
         // Bootstrap ScrollSpy for active nav on scroll
         if (typeof bootstrap !== 'undefined' && bootstrap.ScrollSpy) {
             const navbar = document.querySelector('.navbar');
             const offset = navbar ? navbar.offsetHeight + 8 : 80;
-            new bootstrap.ScrollSpy(document.body, { target: '#navbarNav', offset });
+            new bootstrap.ScrollSpy(document.body, {
+                target: '#navbarNav',
+                offset
+            });
         }
-        
+
         // Typing effect for top banner slogans
-        (function(){
+        (function () {
             const target = document.getElementById('typedSlogan');
             if (!target) return;
             const slogans = [
@@ -754,6 +997,10 @@
             };
             type();
         })();
+
     </script>
+    
+
 </body>
+
 </html>

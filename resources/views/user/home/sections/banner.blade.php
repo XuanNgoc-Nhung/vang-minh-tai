@@ -4,7 +4,7 @@
     <div class="container py-5 py-lg-6 content">
         <div class="row">
             <div class="col-12 col-lg-8 wow animate__animated animate__fadeInUp" data-wow-delay=".1s">
-                <span class="badge text-bg-primary rounded-pill mb-2">Khẩu hiệu</span>
+                <span class="badge text-bg-primary rounded-pill mb-2">Minh Tài Jewelry</span>
                 <h2 class="fw-bold mb-2"><span id="typedSlogan" class="typing responsive-slogan"></span></h2>
                 <p class="mb-0">An toàn – Minh bạch – Hiệu quả</p>
             </div>
