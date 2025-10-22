@@ -588,6 +588,56 @@
         border-left: 4px solid #ffc107;
     }
 
+    /* Countdown Timer Styles */
+    .countdown-timer {
+        background-color: rgba(255, 193, 7, 0.1);
+        border: 1px solid #ffc107;
+        border-radius: 0.375rem;
+        padding: 0.5rem 0.75rem;
+    }
+
+    .countdown-display {
+        display: flex;
+        align-items: center;
+    }
+
+    .countdown-display .badge {
+        font-size: 0.875rem;
+        padding: 0.375rem 0.5rem;
+        min-width: 2rem;
+        text-align: center;
+    }
+
+    .countdown-display .badge.badge-warning {
+        background-color: #ffc107;
+        color: #000;
+        font-weight: 600;
+    }
+
+    .countdown-display .badge.badge-danger {
+        background-color: #dc3545;
+        color: #fff;
+        font-weight: 600;
+        animation: pulse 1s infinite;
+    }
+
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+        100% { transform: scale(1); }
+    }
+
+    /* Countdown warning styles */
+    .countdown-warning {
+        background-color: rgba(220, 53, 69, 0.1);
+        border-color: #dc3545;
+    }
+
+    .countdown-warning .countdown-display .badge {
+        background-color: #dc3545;
+        color: #fff;
+    }
+
 </style>
 @endpush
 
@@ -856,7 +906,7 @@
                         // Hiển thị thông báo modal thành công
                         showNotificationModal('success', 'Yêu cầu nạp tiền đã được tạo thành công!',
                             'Vui lòng làm theo hướng dẫn trên màn hình để chuyển khoản đúng thông tin. Sau khi chuyển khoản, tiền sẽ được cộng vào ví trong vòng 5-10 phút.',
-                            true);
+                            false);
 
                         // Hiển thị thông báo hướng dẫn ngay trên màn hình (không chuyển hướng)
                         const baseMessage = response.data.message;
@@ -895,7 +945,7 @@
                                 '✅ Có nội dung chuyển khoản, bắt đầu kiểm tra trạng thái thanh toán');
                             console.log('Nội dung:', transferContentValue);
                             startPaymentStatusCheck(transferContentValue,
-                            300); // Kiểm tra tối đa 5 phút (300 giây)
+                            31); // Kiểm tra tối đa 5 phút (300 giây)
                         } else {
                             console.log('❌ Element transferContent không tồn tại hoặc không có giá trị');
                         }
@@ -961,14 +1011,14 @@
 
         function generateQRData(accountNumber, bankName, transferContent, amount) {
             // This is a simplified example - in reality, you'd generate proper bank transfer data
-            return `bank://transfer?bank=${encodeURIComponent(bankName)}&account=${accountNumber}&amount=${amount}&note=${encodeURIComponent(transferContent)}`;
+            return `acc=${accountNumber}&bank=${bankName}&amount=${amount}&des=${transferContent}`;
         }
 
         function generateQRCodeImage(data) {
             // Using a free QR code API for demo purposes
             // In production, consider using a proper QR code library
             const qrUrl =
-                `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(data)}`;
+                `https://qr.sepay.vn/img?${data}`;
 
             qrCode.innerHTML = `<img src="${qrUrl}" alt="QR Code" class="img-fluid">`;
         }
@@ -1134,7 +1184,9 @@
 
         // Biến để lưu trữ interval ID và trạng thái kiểm tra
         let paymentCheckInterval = null;
+        let countdownInterval = null;
         let isCheckingPayment = false;
+        let currentTransferContent = null;
 
         /**
          * Hàm kiểm tra trạng thái thanh toán
@@ -1153,12 +1205,16 @@
             }
 
             isCheckingPayment = true;
+            currentTransferContent = transferContent;
             let attemptCount = 0;
 
             console.log('Bắt đầu kiểm tra trạng thái thanh toán:', transferContent);
 
             // Hiển thị thông báo đang kiểm tra
             showPaymentCheckingStatus();
+
+            // Bắt đầu đếm ngược thời gian (5 phút = 300 giây)
+            startCountdownTimer(300);
 
             // Tạo interval kiểm tra mỗi 1 giây
             paymentCheckInterval = setInterval(() => {
@@ -1239,8 +1295,118 @@
                 clearInterval(paymentCheckInterval);
                 paymentCheckInterval = null;
             }
+            if (countdownInterval) {
+                clearInterval(countdownInterval);
+                countdownInterval = null;
+            }
             isCheckingPayment = false;
+            currentTransferContent = null;
             hidePaymentCheckingStatus();
+        }
+
+        /**
+         * Bắt đầu đếm ngược thời gian
+         * @param {number} totalSeconds - Tổng số giây đếm ngược
+         */
+        function startCountdownTimer(totalSeconds) {
+            let remainingSeconds = totalSeconds;
+            
+            // Cập nhật hiển thị ban đầu
+            updateCountdownDisplay(remainingSeconds);
+            
+            countdownInterval = setInterval(() => {
+                remainingSeconds--;
+                updateCountdownDisplay(remainingSeconds);
+                
+                // Kiểm tra nếu hết thời gian
+                if (remainingSeconds <= 0) {
+                    clearCountdownTimer();
+                    handlePaymentTimeout();
+                }
+            }, 1000);
+        }
+
+        /**
+         * Cập nhật hiển thị đếm ngược
+         * @param {number} seconds - Số giây còn lại
+         */
+        function updateCountdownDisplay(seconds) {
+            const minutes = Math.floor(seconds / 60);
+            const remainingSeconds = seconds % 60;
+            
+            const minutesEl = document.getElementById('countdown-minutes');
+            const secondsEl = document.getElementById('countdown-seconds');
+            const countdownTimer = document.querySelector('.countdown-timer');
+            
+            if (minutesEl && secondsEl) {
+                minutesEl.textContent = minutes.toString().padStart(2, '0');
+                secondsEl.textContent = remainingSeconds.toString().padStart(2, '0');
+                
+                // Thay đổi màu sắc khi còn ít thời gian
+                if (seconds <= 60) { // Còn 1 phút
+                    minutesEl.className = 'badge badge-danger mr-1';
+                    secondsEl.className = 'badge badge-danger ml-1';
+                    if (countdownTimer) {
+                        countdownTimer.classList.add('countdown-warning');
+                    }
+                } else if (seconds <= 120) { // Còn 2 phút
+                    minutesEl.className = 'badge badge-warning mr-1';
+                    secondsEl.className = 'badge badge-warning ml-1';
+                }
+            }
+        }
+
+        /**
+         * Dừng đếm ngược
+         */
+        function clearCountdownTimer() {
+            if (countdownInterval) {
+                clearInterval(countdownInterval);
+                countdownInterval = null;
+            }
+        }
+
+        /**
+         * Xử lý khi hết thời gian thanh toán
+         */
+        function handlePaymentTimeout() {
+            console.log('Hết thời gian thanh toán, bắt đầu hủy giao dịch');
+            
+            // Dừng kiểm tra trạng thái
+            clearPaymentCheckInterval();
+            
+            // Gọi API hủy giao dịch nếu có nội dung chuyển khoản
+            if (currentTransferContent) {
+                cancelPaymentRequest(currentTransferContent);
+            } else {
+                showPaymentTimeoutModal();
+            }
+        }
+
+        /**
+         * Gọi API hủy giao dịch
+         * @param {string} transferContent - Nội dung chuyển khoản
+         */
+        function cancelPaymentRequest(transferContent) {
+            console.log('Gọi API hủy giao dịch với nội dung:', transferContent);
+            
+            axios.post('/dashboard/cancel-payment', {
+                noi_dung: transferContent,
+                _token: document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            }, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                }
+            })
+            .then(response => {
+                console.log('Hủy giao dịch thành công:', response.data);
+                showPaymentCancelledModal();
+            })
+            .catch(error => {
+                console.error('Lỗi khi hủy giao dịch:', error);
+                showPaymentTimeoutModal();
+            });
         }
 
         /**
@@ -1260,11 +1426,30 @@
                         <div>
                             <h6 class="mb-1"><i class="fas fa-search mr-1"></i> Vui lòng thanh toán...</h6>
                             <p class="mb-0 small" id="payment-check-message">Đang chờ giao dịch...</p>
+                            
+                            <!-- Countdown Timer -->
+                            <div class="countdown-timer mt-2 mb-2">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-clock text-warning mr-2"></i>
+                                    <span class="text-muted small mr-2">Thời gian còn lại:</span>
+                                    <div class="countdown-display">
+                                        <span id="countdown-minutes" class="badge badge-warning mr-1">05</span>
+                                        <span class="text-muted small">:</span>
+                                        <span id="countdown-seconds" class="badge badge-warning ml-1">00</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
                             <div class="progress mt-2" style="height: 4px;">
                                 <div class="progress-bar progress-bar-striped progress-bar-animated" 
                                      role="progressbar" style="width: 0%" id="payment-check-progress"></div>
                             </div>
                         </div>
+                    </div>
+                    <div class="ml-3">
+                        <button type="button" class="btn btn-sm btn-outline-secondary" id="stop-payment-check">
+                            <i class="fas fa-stop mr-1"></i> Dừng
+                        </button>
                     </div>
                 </div>
             </div>
@@ -1345,6 +1530,9 @@
 
             showNotificationModal('success', 'Thanh toán thành công', successMessage, true);
 
+            // Xóa nội dung form khi giao dịch thành công
+            clearFormData();
+
             // Tự động chuyển hướng đến trang lịch sử sau 3 giây
             setTimeout(() => {
                 window.location.href = '{{ route("dashboard.lich-su-nap-rut") }}?loai=nap';
@@ -1364,10 +1552,110 @@
         `;
 
             showNotificationModal('warning', 'Hết thời gian chờ', timeoutMessage, true);
+
+            // Xóa nội dung form khi giao dịch quá hạn
+            clearFormData();
         }
+
+        /**
+         * Hiển thị modal thông báo giao dịch bị hủy
+         */
+        function showPaymentCancelledModal() {
+            const cancelledMessage = `
+            <div class="alert alert-danger">
+                <h6 class="mb-2"><i class="fas fa-times-circle mr-1"></i> Giao dịch đã bị hủy</h6>
+                <p class="mb-2">Giao dịch nạp tiền đã bị hủy do hết thời gian chờ thanh toán (5 phút).</p>
+                <p class="mb-2">Nếu bạn đã thực hiện chuyển khoản, vui lòng liên hệ hỗ trợ để được xử lý.</p>
+                <div class="mt-3">
+                    <button type="button" class="btn btn-sm btn-outline-primary mr-2" onclick="createNewDepositRequest()">
+                        <i class="fas fa-plus mr-1"></i> Tạo yêu cầu mới
+                    </button>
+                    <button type="button" class="btn btn-sm btn-outline-info" onclick="showContactInfo()">
+                        <i class="fas fa-phone mr-1"></i> Liên hệ hỗ trợ
+                    </button>
+                </div>
+            </div>
+        `;
+
+            showNotificationModal('error', 'Giao dịch bị hủy', cancelledMessage, true);
+
+            // Xóa nội dung form khi giao dịch bị hủy
+            clearFormData();
+        }
+
+        /**
+         * Tạo yêu cầu nạp tiền mới
+         */
+        window.createNewDepositRequest = function() {
+            // Sử dụng hàm clearFormData để xóa toàn bộ nội dung form
+            clearFormData();
+            
+            // Close modal
+            $(notificationModal).modal('hide');
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        };
 
         // Hàm để bắt đầu kiểm tra trạng thái thanh toán (sẽ được gọi từ sendNapTienRequest)
         window.startPaymentStatusCheck = startPaymentStatusCheck;
+
+        /**
+         * Xóa nội dung form chuyển khoản
+         */
+        function clearFormData() {
+            console.log('Đang xóa nội dung form chuyển khoản...');
+            
+            // Xóa nội dung các trường input
+            if (amountInput) {
+                amountInput.value = '';
+                amountInput.classList.remove('is-invalid');
+            }
+            
+            if (transferContent) {
+                transferContent.value = '';
+                transferContent.classList.remove('is-invalid');
+            }
+            
+            // Xóa lựa chọn ngân hàng
+            document.querySelectorAll('.bank-logo-item').forEach(item => {
+                item.classList.remove('selected');
+            });
+            
+            // Reset form về trạng thái ban đầu
+            setFormEnabled(false);
+            bankLogo.classList.add('d-none');
+            bankNameInput.value = '';
+            bankAccount.value = '';
+            bankHolder.value = '';
+            bankBranch.value = '';
+            
+            // Xóa trạng thái active của các nút amount
+            document.querySelectorAll('.amount-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Ẩn QR code
+            hideQRCode();
+            
+            // Xóa các thông báo trạng thái
+            const existingStatus = document.getElementById('payment-checking-status');
+            if (existingStatus) {
+                existingStatus.remove();
+            }
+            
+            const existingNotice = document.getElementById('deposit-instruction');
+            if (existingNotice) {
+                existingNotice.remove();
+            }
+            
+            const existingLimitNotice = document.getElementById('deposit-limit-notice');
+            if (existingLimitNotice) {
+                existingLimitNotice.remove();
+            }
+            
+            console.log('Đã xóa nội dung form chuyển khoản thành công');
+        }
 
         // Test button functionality
         const testCheckBtn = document.getElementById('testCheckBtn');

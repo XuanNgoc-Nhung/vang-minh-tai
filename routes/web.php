@@ -34,7 +34,7 @@ Route::prefix('api')->middleware(['cors'])->group(function () {
     });
     Route::post('/thanh-toan/process', [HomeController::class, 'processPaymentApi'])->name('api.thanh-toan.process');
 });
-Route::group(['prefix' => 'admin'], function () {
+Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     Route::get('/', [AdminController::class, 'index'])->name('admin.index');
     // Người dùng
     Route::get('/users', [AdminController::class, 'users'])->name('admin.users');
@@ -126,6 +126,7 @@ Route::group(['middleware' => 'auth','prefix' => 'dashboard'], function () {
     Route::get('/nap-tien', [UserDashboardController::class, 'napTien'])->name('dashboard.nap-tien');
     Route::post('/nap-tien', [UserDashboardController::class, 'createNapTienRequest'])->name('dashboard.nap-tien.create');
     Route::post('/check-payment-status', [UserDashboardController::class, 'checkPaymentStatus'])->name('dashboard.check-payment-status');
+    Route::post('/cancel-payment', [UserDashboardController::class, 'cancelPayment'])->name('dashboard.cancel-payment');
     // end Nạp tiền
     // Rút tiền
     Route::get('/rut-tien', [UserDashboardController::class, 'rutTien'])->name('dashboard.rut-tien');

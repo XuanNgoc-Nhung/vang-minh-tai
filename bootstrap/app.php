@@ -13,6 +13,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
             'cors' => \App\Http\Middleware\CorsMiddleware::class,
+            'admin' => \App\Http\Middleware\AdminMiddleware::class,
         ]);
         
         // Bỏ qua CSRF cho các route API

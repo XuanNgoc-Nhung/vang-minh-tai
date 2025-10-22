@@ -452,6 +452,25 @@ class UserDashboardController extends Controller
             'noi_dung' => $request->noi_dung
         ]);
 
+        // Cập nhật trạng thái các giao dịch quá hạn (created_at cách đây hơn 5 phút và trang_thai = 0)
+        $expiredTransactions = NapRut::where('user_id', $user->id)
+            ->where('trang_thai', 0)
+            ->where('created_at', '<', now()->subMinutes(5))
+            ->get();
+
+        if ($expiredTransactions->count() > 0) {
+            Log::info('UserDashboardController@createNapTienRequest: Cập nhật trạng thái giao dịch quá hạn', [
+                'user_id' => $user->id,
+                'expired_count' => $expiredTransactions->count(),
+                'expired_ids' => $expiredTransactions->pluck('id')->toArray()
+            ]);
+
+            NapRut::where('user_id', $user->id)
+                ->where('trang_thai', 0)
+                ->where('created_at', '<', now()->subMinutes(5))
+                ->update(['trang_thai' => 3]); // 3: quá hạn
+        }
+
         // Kiểm tra số lượng yêu cầu nạp chưa thành công
         $pendingDepositCount = NapRut::where('user_id', $user->id)
             ->where('loai', 'nap')
@@ -1989,11 +2008,32 @@ class UserDashboardController extends Controller
                     ->first();
 
                 if ($pendingNapRut) {
+                    // Kiểm tra thời gian tạo bản ghi, nếu quá 30 giây thì chuyển trạng thái thành 3 (quá thời gian)
+                    $createdAt = $pendingNapRut->created_at;
+                    $now = now();
+                    $timeDiff = $createdAt->diffInSeconds($now);
+                    $status = 'pending';
+                    if ($timeDiff > 300 && $pendingNapRut->trang_thai == 0) {
+                        // Cập nhật trạng thái thành 3 (quá thời gian)
+                        $pendingNapRut->update(['trang_thai' => 3]);
+                        
+                        Log::info('UserDashboardController@checkPaymentStatus: Giao dịch quá thời gian, cập nhật trạng thái', [
+                            'user_id' => $user->id,
+                            'nap_rut_id' => $pendingNapRut->id,
+                            'old_trang_thai' => 0,
+                            'new_trang_thai' => 3,
+                            'time_diff_seconds' => $timeDiff,
+                            'created_at' => $createdAt->format('Y-m-d H:i:s'),
+                            'current_time' => $now->format('Y-m-d H:i:s')
+                        ]);
+                    }
+                    
                     Log::info('UserDashboardController@checkPaymentStatus: Tìm thấy giao dịch chưa thành công', [
                         'user_id' => $user->id,
                         'nap_rut_id' => $pendingNapRut->id,
                         'trang_thai' => $pendingNapRut->trang_thai,
-                        'noi_dung' => $transferContent
+                        'noi_dung' => $transferContent,
+                        'time_diff_seconds' => $timeDiff
                     ]);
 
                     $statusMessage = '';
@@ -2004,13 +2044,17 @@ class UserDashboardController extends Controller
                         case 2:
                             $statusMessage = 'Giao dịch đã bị từ chối';
                             break;
+                        case 3:
+                            $status = 'expired';
+                            $statusMessage = 'Giao dịch đã quá thời gian chờ';
+                            break;
                         default:
                             $statusMessage = 'Giao dịch đang được xử lý';
                     }
 
                     return response()->json([
                         'success' => true,
-                        'status' => 'pending',
+                        'status' => $status,
                         'message' => $statusMessage,
                         'data' => [
                             'id' => $pendingNapRut->id,
@@ -2042,6 +2086,98 @@ class UserDashboardController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Có lỗi xảy ra khi kiểm tra trạng thái thanh toán'
+            ], 500);
+        }
+    }
+
+    /**
+     * Hủy giao dịch nạp tiền do hết thời gian chờ
+     */
+    public function cancelPayment(Request $request)
+    {
+        Log::info('UserDashboardController@cancelPayment: Bắt đầu hủy giao dịch', [
+            'user_id' => Auth::id(),
+            'transfer_content' => $request->noi_dung,
+            'ip_address' => $request->ip()
+        ]);
+
+        $validator = Validator::make($request->all(), [
+            'noi_dung' => 'required|string|max:255',
+        ], [
+            'noi_dung.required' => 'Vui lòng nhập nội dung chuyển khoản',
+            'noi_dung.max' => 'Nội dung chuyển khoản không được vượt quá 255 ký tự',
+        ]);
+
+        if ($validator->fails()) {
+            Log::warning('UserDashboardController@cancelPayment: Validation thất bại', [
+                'user_id' => Auth::id(),
+                'errors' => $validator->errors()->toArray()
+            ]);
+            
+            return response()->json([
+                'success' => false,
+                'message' => 'Dữ liệu không hợp lệ',
+                'errors' => $validator->errors()
+            ]);
+        }
+
+        try {
+            $user = Auth::user();
+            $transferContent = $request->noi_dung;
+
+            // Tìm bản ghi NapRut với loại 'nap', noi_dung khớp và trạng thái = 0 (chờ xử lý)
+            $napRut = NapRut::where('user_id', $user->id)
+                ->where('loai', 'nap')
+                ->where('noi_dung', $transferContent)
+                ->where('trang_thai', 0) // 0 = chờ xử lý
+                ->first();
+
+            if ($napRut) {
+                // Cập nhật trạng thái thành 3 (hủy do hết thời gian)
+                $napRut->update([
+                    'trang_thai' => 3,
+                    'ghi_chu' => 'Giao dịch bị hủy do hết thời gian chờ thanh toán (5 phút)'
+                ]);
+
+                Log::info('UserDashboardController@cancelPayment: Hủy giao dịch thành công', [
+                    'user_id' => $user->id,
+                    'nap_rut_id' => $napRut->id,
+                    'so_tien' => $napRut->so_tien,
+                    'noi_dung' => $transferContent
+                ]);
+
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Giao dịch đã được hủy thành công do hết thời gian chờ thanh toán',
+                    'data' => [
+                        'id' => $napRut->id,
+                        'so_tien' => $napRut->so_tien,
+                        'trang_thai' => $napRut->trang_thai,
+                        'ghi_chu' => $napRut->ghi_chu,
+                        'cancelled_at' => now()->format('d/m/Y H:i:s')
+                    ]
+                ]);
+            } else {
+                Log::warning('UserDashboardController@cancelPayment: Không tìm thấy giao dịch để hủy', [
+                    'user_id' => $user->id,
+                    'noi_dung' => $transferContent
+                ]);
+
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Không tìm thấy giao dịch để hủy hoặc giao dịch đã được xử lý'
+                ]);
+            }
+        } catch (\Exception $e) {
+            Log::error('UserDashboardController@cancelPayment: Lỗi khi hủy giao dịch', [
+                'user_id' => Auth::id(),
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Có lỗi xảy ra khi hủy giao dịch'
             ], 500);
         }
     }

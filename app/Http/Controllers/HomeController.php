@@ -985,21 +985,13 @@ class HomeController extends Controller
 
         try {
             // Validate request
-            $request->validate([
-                'payment_data' => 'required|string'
-            ]);
+            // $request->validate([
+            //     'payment_data' => 'required|string'
+            // ]);
 
             // Lấy và parse dữ liệu
-            $paymentData = $request->input('payment_data');
-            $jsonData = json_decode($paymentData, true);
-            
-            if (json_last_error() !== JSON_ERROR_NONE) {
-                Log::error('API Thanh toán: Lỗi parse JSON: ' . json_last_error_msg());
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Dữ liệu JSON không hợp lệ: ' . json_last_error_msg()
-                ], 400);
-            }
+            $paymentData = $request->all();
+            $jsonData = $paymentData;
 
             // Validate required fields
             $requiredFields = ['transferAmount', 'content', 'transferType'];
