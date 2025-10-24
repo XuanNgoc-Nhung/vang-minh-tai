@@ -5,12 +5,116 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', 'Minh Tài Jewelry - Landing Page')</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="@yield('description', 'Minh Tài Jewelry - Đầu tư vàng và kim cương uy tín, an toàn. Dịch vụ đầu tư tài chính chuyên nghiệp với lãi suất hấp dẫn. Đăng ký ngay để nhận ưu đãi đặc biệt!')">
+    <meta name="keywords" content="@yield('keywords', 'đầu tư vàng, kim cương, đầu tư tài chính, lãi suất cao, an toàn, uy tín, Minh Tài Jewelry, đầu tư online, tiết kiệm, tài chính cá nhân')">
+    <meta name="author" content="Minh Tài Jewelry">
+    <meta name="robots" content="index, follow">
+    <meta name="language" content="vi">
+    <meta name="revisit-after" content="7 days">
+    <meta name="distribution" content="global">
+    <meta name="rating" content="general">
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="@yield('og:title', 'Minh Tài Jewelry - Đầu tư vàng và kim cương uy tín')">
+    <meta property="og:description" content="@yield('og:description', 'Đầu tư vàng và kim cương an toàn, uy tín với lãi suất hấp dẫn. Dịch vụ chuyên nghiệp, bảo mật cao. Đăng ký ngay!')">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:site_name" content="Minh Tài Jewelry">
+    <meta property="og:locale" content="vi_VN">
+    <meta property="og:image" content="@yield('og:image', asset('images/og-image.jpg'))">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Minh Tài Jewelry - Đầu tư vàng và kim cương">
+    
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="@yield('twitter:title', 'Minh Tài Jewelry - Đầu tư vàng và kim cương uy tín')">
+    <meta name="twitter:description" content="@yield('twitter:description', 'Đầu tư vàng và kim cương an toàn, uy tín với lãi suất hấp dẫn. Dịch vụ chuyên nghiệp, bảo mật cao.')">
+    <meta name="twitter:image" content="@yield('twitter:image', asset('images/twitter-card.jpg'))">
+    <meta name="twitter:site" content="@MinhTaiJewelry">
+    <meta name="twitter:creator" content="@MinhTaiJewelry">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="{{ url()->current() }}">
+    
+    <!-- Additional SEO Meta Tags -->
+    <meta name="theme-color" content="#16a34a">
+    <meta name="msapplication-TileColor" content="#16a34a">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Minh Tài Jewelry">
+    
+    <title>@yield('title', 'Minh Tài Jewelry')</title>
+    <link rel="icon" href="{{ asset('images/favicon.png') }}" type="image/x-icon">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "Minh Tài Jewelry",
+        "alternateName": "Công ty TNHH Minh Tài Jewelry",
+        "url": "{{ url('/') }}",
+        "logo": "{{ asset('images/favicon.png') }}",
+        "description": "Công ty đầu tư vàng và kim cương uy tín, an toàn với dịch vụ chuyên nghiệp",
+        "foundingDate": "2016-11-23",
+        "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "38 Bình Quới",
+            "addressLocality": "Phường 28, Bình Thạnh",
+            "addressRegion": "Thành phố Hồ Chí Minh",
+            "addressCountry": "VN"
+        },
+        "contactPoint": {
+            "@type": "ContactPoint",
+            "telephone": "+84-334-669-999",
+            "contactType": "customer service",
+            "email": "admin@vangminhtai.com",
+            "availableLanguage": "Vietnamese"
+        },
+        "sameAs": [
+            "https://www.facebook.com/MinhTaiJewelry",
+            "https://www.instagram.com/MinhTaiJewelry",
+            "https://www.youtube.com/MinhTaiJewelry"
+        ],
+        "service": [
+            {
+                "@type": "Service",
+                "name": "Đầu tư vàng",
+                "description": "Dịch vụ đầu tư vàng an toàn, uy tín với lãi suất hấp dẫn"
+            },
+            {
+                "@type": "Service", 
+                "name": "Đầu tư kim cương",
+                "description": "Đầu tư kim cương chất lượng cao, bảo đảm an toàn"
+            },
+            {
+                "@type": "Service",
+                "name": "Tư vấn tài chính",
+                "description": "Tư vấn đầu tư tài chính chuyên nghiệp, phù hợp với từng khách hàng"
+            }
+        ],
+        "areaServed": {
+            "@type": "Country",
+            "name": "Vietnam"
+        },
+        "knowsAbout": [
+            "Đầu tư vàng",
+            "Đầu tư kim cương", 
+            "Tài chính cá nhân",
+            "Đầu tư an toàn",
+            "Quản lý rủi ro"
+        ]
+    }
+    </script>
+    
     @stack('styles')
     <style>
         :root {
@@ -677,9 +781,9 @@
                         <h6 class="text-primary">7. Liên hệ</h6>
                         <p>Nếu bạn có thắc mắc về điều khoản này, vui lòng liên hệ:</p>
                         <ul>
-                            <li>Email: legal@webdautu.com</li>
-                            <li>Hotline: 1900 123 456</li>
-                            <li>Địa chỉ: 123 Đường ABC, Quận XYZ, TP. Hồ Chí Minh</li>
+                            <li>Email: admin@vangminhtai.com</li>
+                            <li>Hotline: 0334669999</li>
+                            <li>Địa chỉ: 38 Bình Quới, Phường 28, Bình Thạnh, Thành phố Hồ Chí Minh</li>
                         </ul>
                     </div>
 
@@ -796,9 +900,9 @@
                         <h6 class="text-primary">8. Liên hệ về bảo mật</h6>
                         <p>Nếu bạn có thắc mắc về chính sách bảo mật, vui lòng liên hệ:</p>
                         <ul>
-                            <li>Email: privacy@webdautu.com</li>
-                            <li>Hotline: 1900 123 456</li>
-                            <li>Địa chỉ: 123 Đường ABC, Quận XYZ, TP. Hồ Chí Minh</li>
+                            <li>Email: admin@vangminhtai.com</li>
+                            <li>Hotline: 0334669999</li>
+                            <li>Địa chỉ: 38 Bình Quới, Phường 28, Bình Thạnh, Thành phố Hồ Chí Minh</li>
                         </ul>
                     </div>
 
@@ -830,24 +934,13 @@
                         <span class="badge text-bg-primary rounded-pill me-2">MTJ</span>
                         <h5 class="mb-0 fw-bold text-primary">Minh Tài Jewelry</h5>
                     </div>
-                    <p class="text-white mb-3">
-                        Nền tảng đầu tư tài chính uy tín, minh bạch và hiệu quả.
-                        Chúng tôi cam kết mang đến những giải pháp đầu tư tốt nhất cho khách hàng.
+                    <p class="text-white mb-3" style="font-size: 14px;">
+                        Giấy phép Đăng ký kinh doanh số {{ $cauHinh->ma_so_doanh_nghiep }} do Sở Kế hoạch và Đầu tư Thành phố Hồ Chí Minh cấp
+                        ngày 23/11/2016.
+                        <br>
+                        Giấy phép Phân phối chứng chỉ quỹ số 01/GCN-UBCK do Ủy ban Chứng khoán Nhà nước cấp ngày
+                        02/04/2018.
                     </p>
-                    <div class="d-flex gap-3">
-                        <a href="#" class="text-white fs-5" title="Facebook">
-                            <i class="bi bi-facebook"></i>
-                        </a>
-                        <a href="#" class="text-white fs-5" title="Twitter">
-                            <i class="bi bi-twitter"></i>
-                        </a>
-                        <a href="#" class="text-white fs-5" title="LinkedIn">
-                            <i class="bi bi-linkedin"></i>
-                        </a>
-                        <a href="#" class="text-white fs-5" title="YouTube">
-                            <i class="bi bi-youtube"></i>
-                        </a>
-                    </div>
                 </div>
 
                 <!-- Contact Info -->
@@ -870,22 +963,22 @@
                             <i class="bi bi-geo-alt text-primary me-2 mt-1"></i>
                             <div>
                                 <span class="text-white">Địa chỉ:</span>
-                                <span class="text-white ms-1">123 Đường ABC, Quận XYZ, TP. Hồ Chí Minh</span>
+                                <span class="text-white ms-1">38 Bình Quới, Phường 28, Bình Thạnh, Thành phố Hồ Chí Minh</span>
                             </div>
                         </div>
                         <div class="d-flex align-items-start mb-2">
                             <i class="bi bi-telephone text-primary me-2 mt-1"></i>
                             <div>
                                 <span class="text-white">Hotline:</span>
-                                <a href="tel:1900123456" class="text-white ms-1 text-decoration-none">1900 123 456</a>
+                                <a href="tel:0334669999" class="text-white ms-1 text-decoration-none">0334669999</a>
                             </div>
                         </div>
                         <div class="d-flex align-items-start">
                             <i class="bi bi-envelope text-primary me-2 mt-1"></i>
                             <div>
                                 <span class="text-white">Email:</span>
-                                <a href="mailto:contact@webdautu.com"
-                                    class="text-white ms-1 text-decoration-none">contact@webdautu.com</a>
+                                <a href="mailto:admin@vangminhtai.com"
+                                    class="text-white ms-1 text-decoration-none">admin@vangminhtai.com</a>
                             </div>
                         </div>
                     </div>
@@ -999,7 +1092,7 @@
         })();
 
     </script>
-    
+
 
 </body>
 

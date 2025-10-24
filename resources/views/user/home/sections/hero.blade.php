@@ -13,24 +13,24 @@
                     <img src="https://images.unsplash.com/photo-1501183638710-841dd1904471?q=80&w=1600&auto=format&fit=crop"
                         class="d-block w-100 carousel-image" alt="Toà nhà hiện đại">
                     <div class="carousel-caption text-start bg-dark bg-opacity-50 rounded p-3">
-                        <h5>Dự án A</h5>
-                        <p>Tối ưu lợi nhuận bền vững</p>
+                        <h5>Giấc mơ xanh</h5>
+                        <p>Với gói tiết kiệm này, bạn không chỉ tích luỹ cho bản thân mà còn góp phần bảo vệ dòng vốn lưu động của mình.</p>
                     </div>
                 </div>
                 <div class="carousel-item" data-bs-interval="4500">
                     <img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=1600&auto=format&fit=crop"
                         class="d-block w-100 carousel-image" alt="Thành phố về đêm">
                     <div class="carousel-caption text-start bg-dark bg-opacity-50 rounded p-3">
-                        <h5>Dự án B</h5>
-                        <p>Đa dạng hoá danh mục đầu tư</p>
+                        <h5>Hành trình vàng</h5>
+                        <p>Gói tiệt kiệm này giúp bạn mở ra một hành trình vàng bền vững. Mở ra nhiều cơ hội mới trong đầu tư kinh doanh.</p>
                     </div>
                 </div>
                 <div class="carousel-item" data-bs-interval="4500">
                     <img src="https://images.unsplash.com/photo-1496307042754-b4aa456c4a2d?q=80&w=1600&auto=format&fit=crop"
                         class="d-block w-100 carousel-image" alt="Khu đô thị xanh">
                     <div class="carousel-caption text-start bg-dark bg-opacity-50 rounded p-3">
-                        <h5>Dự án C</h5>
-                        <p>An toàn – Minh bạch – Hiệu quả</p>
+                        <h5>Gói vàng bền vững</h5>
+                        <p>Đem lại sự an tâm với lãi suất ổn định, linh hoạt trong việc rút tiền</p>
                     </div>
                 </div>
             </div>

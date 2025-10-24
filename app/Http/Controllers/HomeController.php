@@ -448,21 +448,20 @@ class HomeController extends Controller
     }
     
     /**
-     * API: Lịch sử giá vàng theo mã vàng trong khoảng N ngày gần nhất
+     * API: Lịch sử giá vàng theo mã vàng trong khoảng 7 ngày gần nhất
      */
     public function getGiaVangHistory(Request $request)
     {
         $maVang = (string) $request->query('ma_vang', '');
-        $days = (int) $request->query('days', 30);
-        $to = (string) $request->query('to', '');
         
         if ($maVang === '') {
             return response()->json(['success' => false, 'message' => 'Thiếu tham số ma_vang'], 422);
         }
-        if ($days <= 0) { $days = 30; }
         
-        $toDate = $to !== '' ? date('Y-m-d', strtotime($to)) : date('Y-m-d');
-        $fromDate = date('Y-m-d', strtotime('-' . $days . ' days', strtotime($toDate)));
+        // Cố định lấy 7 ngày gần nhất
+        $days = 7;
+        $toDate = date('Y-m-d');
+        $fromDate = date('Y-m-d', strtotime('-' . $days . ' days'));
         
         $vang = VangDauTu::where('ma_vang', $maVang)->first();
         if (!$vang) {
@@ -598,6 +597,13 @@ class HomeController extends Controller
                     ->first();
                 
                 if ($existingRecord) {
+                    $existingRecord->update([
+                        'gia_mua' => $data['gia_mua'],
+                        'gia_ban' => $data['gia_ban'],
+                    ]);
+                    $existingRecord->gia_mua = $data['gia_mua'];
+                    $existingRecord->gia_ban = $data['gia_ban'];
+                    $existingRecord->save();
                     $skippedCount++;
                     Log::info("Bản ghi đã tồn tại", [
                         'thoi_gian' => $data['thoi_gian'],

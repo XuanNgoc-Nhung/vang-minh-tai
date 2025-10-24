@@ -12,7 +12,8 @@
                     <div class="card-body">
                         <p class="mb-3">"Đội ngũ tư vấn chuyên nghiệp, giúp tôi xây dựng danh mục đầu tư hợp lý."</p>
                         <div class="d-flex align-items-center gap-2">
-                            <div class="rounded-circle bg-secondary" style="width:40px;height:40px;border-radius:50%">
+                            <div class="rounded-circle bg-secondary">
+                                <img style="width:80px;height:80px;border-radius:50%" src="https://htmediagroup.vn/wp-content/uploads/2022/08/Anh-cong-so-1-min.jpg.webp" alt="Minh Anh" class="img-fluid">
                             </div>
                             <div>
                                 <div class="fw-semibold">Minh Anh</div>
@@ -27,7 +28,8 @@
                     <div class="card-body">
                         <p class="mb-3">"Thông tin minh bạch, cập nhật liên tục. Tôi rất yên tâm khi hợp tác."</p>
                         <div class="d-flex align-items-center gap-2">
-                            <div class="rounded-circle bg-secondary" style="width:40px;height:40px;border-radius:50%">
+                            <div class="rounded-circle bg-secondary">
+                                <img style="width:80px;height:80px;border-radius:50%" src="https://htmediagroup.vn/wp-content/uploads/2021/06/Anh-doanh-nhan-17.jpg" alt="Quốc Huy" class="img-fluid">
                             </div>
                             <div>
                                 <div class="fw-semibold">Quốc Huy</div>
@@ -42,7 +44,8 @@
                     <div class="card-body">
                         <p class="mb-3">"Tỷ suất sinh lời ổn định và dịch vụ hỗ trợ nhanh chóng."</p>
                         <div class="d-flex align-items-center gap-2">
-                            <div class="rounded-circle bg-secondary" style="width:40px;height:40px;border-radius:50%">
+                            <div class="rounded-circle bg-secondary">
+                                <img style="width:80px;height:80px;border-radius:50%" src="https://htmediagroup.vn/wp-content/uploads/2022/05/Anh-cong-ty-15-min.jpg.webp" alt="Thu Trang" class="img-fluid">
                             </div>
                             <div>
                                 <div class="fw-semibold">Thu Trang</div>

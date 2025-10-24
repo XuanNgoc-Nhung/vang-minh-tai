@@ -62,8 +62,13 @@
                 </li>
                 @else
                 <li class="nav-item me-2">
-                    <a class="btn btn-warning btn-sm px-3" href="{{ route('register') }}">
-                        <i class="bi bi-box-arrow-in-right me-1"></i>Tài khoản
+                    <a class="btn btn-success btn-sm px-3" href="{{ route('register') }}">
+                        <i class="bi bi-box-arrow-in-right me-1"></i>Đăng ký
+                    </a>
+                </li>
+                <li class="nav-item me-2">
+                    <a class="btn btn-warning btn-sm px-3" href="{{ route('login') }}">
+                        <i class="bi bi-box-arrow-in-right me-1"></i>Đăng nhập
                     </a>
                 </li>
                 @endif
