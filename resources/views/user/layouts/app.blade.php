@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    
+    <title>@yield('title', 'Minh Tài Jewelry')</title>
     <!-- SEO Meta Tags -->
     <meta name="description" content="@yield('description', 'Minh Tài Jewelry - Đầu tư vàng và kim cương uy tín, an toàn. Dịch vụ đầu tư tài chính chuyên nghiệp với lãi suất hấp dẫn. Đăng ký ngay để nhận ưu đãi đặc biệt!')">
     <meta name="keywords" content="@yield('keywords', 'đầu tư vàng, kim cương, đầu tư tài chính, lãi suất cao, an toàn, uy tín, Minh Tài Jewelry, đầu tư online, tiết kiệm, tài chính cá nhân')">
@@ -35,86 +35,12 @@
     <meta name="twitter:image" content="@yield('twitter:image', asset('images/twitter-card.jpg'))">
     <meta name="twitter:site" content="@MinhTaiJewelry">
     <meta name="twitter:creator" content="@MinhTaiJewelry">
-    
-    <!-- Canonical URL -->
-    <link rel="canonical" href="{{ url()->current() }}">
-    
-    <!-- Additional SEO Meta Tags -->
-    <meta name="theme-color" content="#16a34a">
-    <meta name="msapplication-TileColor" content="#16a34a">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="apple-mobile-web-app-title" content="Minh Tài Jewelry">
-    
-    <title>@yield('title', 'Minh Tài Jewelry')</title>
     <link rel="icon" href="{{ asset('images/favicon.png') }}" type="image/x-icon">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    
-    <!-- Structured Data (JSON-LD) -->
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@type": "Organization",
-        "name": "Minh Tài Jewelry",
-        "alternateName": "Công ty TNHH Minh Tài Jewelry",
-        "url": "{{ url('/') }}",
-        "logo": "{{ asset('images/favicon.png') }}",
-        "description": "Công ty đầu tư vàng và kim cương uy tín, an toàn với dịch vụ chuyên nghiệp",
-        "foundingDate": "2016-11-23",
-        "address": {
-            "@type": "PostalAddress",
-            "streetAddress": "38 Bình Quới",
-            "addressLocality": "Phường 28, Bình Thạnh",
-            "addressRegion": "Thành phố Hồ Chí Minh",
-            "addressCountry": "VN"
-        },
-        "contactPoint": {
-            "@type": "ContactPoint",
-            "telephone": "+84-334-669-999",
-            "contactType": "customer service",
-            "email": "admin@vangminhtai.com",
-            "availableLanguage": "Vietnamese"
-        },
-        "sameAs": [
-            "https://www.facebook.com/MinhTaiJewelry",
-            "https://www.instagram.com/MinhTaiJewelry",
-            "https://www.youtube.com/MinhTaiJewelry"
-        ],
-        "service": [
-            {
-                "@type": "Service",
-                "name": "Đầu tư vàng",
-                "description": "Dịch vụ đầu tư vàng an toàn, uy tín với lãi suất hấp dẫn"
-            },
-            {
-                "@type": "Service", 
-                "name": "Đầu tư kim cương",
-                "description": "Đầu tư kim cương chất lượng cao, bảo đảm an toàn"
-            },
-            {
-                "@type": "Service",
-                "name": "Tư vấn tài chính",
-                "description": "Tư vấn đầu tư tài chính chuyên nghiệp, phù hợp với từng khách hàng"
-            }
-        ],
-        "areaServed": {
-            "@type": "Country",
-            "name": "Vietnam"
-        },
-        "knowsAbout": [
-            "Đầu tư vàng",
-            "Đầu tư kim cương", 
-            "Tài chính cá nhân",
-            "Đầu tư an toàn",
-            "Quản lý rủi ro"
-        ]
-    }
-    </script>
-    
     @stack('styles')
     <style>
         :root {
